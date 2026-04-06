@@ -53,9 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // -------------------------------------------------------
     // Contact form -> Google Sheets via Apps Script Web App
-    // Replace APPS_SCRIPT_URL with your deployed Web App URL
     // -------------------------------------------------------
-    const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFsCb6xrZV91-1lNxDVkENhdhcul62UqQCrqsc6rAIpXJGseYHe15VuD2X_v9rQmVn/exec';
 
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
@@ -73,8 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
-                // Apps Script doPost reads the raw body; no JSON content-type header
-                // because cross-origin preflight blocks it — use text/plain trick
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: payload
             })
