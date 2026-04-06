@@ -92,4 +92,48 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // -------------------------------------------------------
+    // Partner form -> Google Sheets via Apps Script Web App
+    // -------------------------------------------------------
+    const partnerForm = document.getElementById('partner-form');
+    if (partnerForm) {
+        partnerForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formStatus = document.getElementById('partner-form-status');
+            formStatus.textContent = 'Sending...';
+            formStatus.style.color = '';
+
+            const companyName     = document.getElementById('company-name').value.trim();
+            const contactName     = document.getElementById('contact-name').value.trim();
+            const email           = document.getElementById('email').value.trim();
+            const phone           = document.getElementById('phone').value.trim();
+            const partnershipType = document.getElementById('partnership-type').value;
+            const message         = document.getElementById('message').value.trim();
+            const inquiryType     = 'partner';
+
+            const payload = JSON.stringify({ companyName, contactName, email, phone, partnershipType, message, inquiryType });
+
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: payload
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    formStatus.textContent = 'Inquiry received! We\'ll be in touch within 2 business days.';
+                    formStatus.style.color = 'var(--color-success, green)';
+                    partnerForm.reset();
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            })
+            .catch(err => {
+                console.error('Partner form submission error:', err);
+                formStatus.textContent = 'Something went wrong. Please email us directly at hello@vtec.example';
+                formStatus.style.color = 'var(--color-error, red)';
+            });
+        });
+    }
 });
