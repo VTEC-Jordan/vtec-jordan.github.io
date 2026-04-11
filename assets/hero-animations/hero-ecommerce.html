@@ -362,7 +362,7 @@
         
         // Listen for messages from parent for theme changes
         window.addEventListener('message', (e) => {
-            if (e.data.theme) {
+            if (e.data && typeof e.data === 'object' && e.data.theme) {
                 document.documentElement.setAttribute('data-theme', e.data.theme);
             }
         });
