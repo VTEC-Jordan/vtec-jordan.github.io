@@ -36,8 +36,23 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
     
+    <!-- Import map for Three.js + Postprocessing ES modules -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+        "postprocessing": "https://cdn.jsdelivr.net/npm/postprocessing@6.36.3/build/index.js"
+      }
+    }
+    </script>
+
+    <!-- GSAP Animation Library -->
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
     <!-- JS -->
     <script defer src="script.js"></script>
+    <script type="module" src="hyperspeed-init.js"></script>
 
     <!-- Structured Data: Organization schema for Google rich results -->
     <script type="application/ld+json">
@@ -86,12 +101,8 @@
 <main>
   <!-- Section: Hero - Main value proposition and primary call to action -->
   <section class="hero" id="hero">
-    <div class="hero-video-bg">
-      <video autoplay muted loop playsinline class="hero-video">
-        <source src="assets/videos/12120613_1920_1080_60fps.mp4" type="video/mp4">
-      </video>
-      <div class="hero-overlay"></div>
-    </div>
+    <div id="hero-hyperspeed" class="hero-hyperspeed-bg"></div>
+    <div class="hero-overlay"></div>
     <div class="container">
       <div class="hero-content">
         <h1 class="hero-title">Senior engineering for products that scale.</h1>

@@ -399,4 +399,172 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // -------------------------------------------------------
+    // GSAP Animations
+    // Hero: SplitText char-by-char fade-in (on load)
+    // Sections below services: ScrollFloat scroll-scrub char animation
+    // Excludes service card content (.service-item)
+    // -------------------------------------------------------
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Split an element's plain text into individual .anim-char <span>s,
+        // wrapped in word containers so line breaks only occur between words.
+        // Sets aria-label on the element so screen readers still read the full text.
+        function splitChars(el) {
+            const text = el.textContent;
+            el.setAttribute('aria-label', text);
+            el.textContent = '';
+            const words = text.split(' ');
+            words.forEach((word, wi) => {
+                const wordSpan = document.createElement('span');
+                wordSpan.style.display = 'inline-block';
+                wordSpan.style.whiteSpace = 'nowrap';
+                [...word].forEach(char => {
+                    const span = document.createElement('span');
+                    span.className = 'anim-char';
+                    span.textContent = char;
+                    wordSpan.appendChild(span);
+                });
+                el.appendChild(wordSpan);
+                if (wi < words.length - 1) {
+                    const space = document.createElement('span');
+                    space.className = 'anim-char';
+                    space.style.display = 'inline-block';
+                    space.textContent = '\u00A0';
+                    el.appendChild(space);
+                }
+            });
+            return el.querySelectorAll('.anim-char');
+        }
+
+        // ---- Hero: SplitText fade-in (power3.out, staggered chars) ----
+        const heroTitle = document.querySelector('.hero-title');
+        const heroDesc  = document.querySelector('.hero-description');
+
+        if (heroTitle) {
+            const chars = splitChars(heroTitle);
+            gsap.fromTo(chars,
+                { opacity: 0, y: 40 },
+                { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.025, delay: 0.2, force3D: true }
+            );
+        }
+
+        if (heroDesc) {
+            const chars = splitChars(heroDesc);
+            gsap.fromTo(chars,
+                { opacity: 0, y: 40 },
+                { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.012, delay: 0.7, force3D: true }
+            );
+        }
+
+        // ---- ScrollFloat: same style as hero, triggered on scroll ----
+        function applyScrollFloat(el) {
+            const chars = splitChars(el);
+            gsap.fromTo(chars,
+                { opacity: 0, y: 40 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: 'power3.out',
+                    stagger: 0.012,
+                    force3D: true,
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 88%',
+                        once: true
+                    }
+                }
+            );
+        }
+
+        // Simple fade-up for elements that contain child markup (strong, em, etc.)
+        function applyFadeIn(el) {
+            gsap.fromTo(el,
+                { opacity: 0, y: 20 },
+                {
+                    opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+                    scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+                }
+            );
+        }
+
+        // Selectors for ScrollFloat — about section and everything from services down,
+        // deliberately excluding .service-item content (the cards shown in the slider).
+        const scrollFloatTargets = [
+            '.services .section-header .section-label',
+            '.services .section-header .section-title',
+        ];
+
+        scrollFloatTargets.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                // Only split elements that contain plain text (no child elements)
+                if (el.childElementCount === 0) {
+                    applyScrollFloat(el);
+                } else {
+                    applyFadeIn(el);
+                }
+            });
+        });
+    } // end gsap if block
+
+
+    // -------------------------------------------------------
+    // StarBorder: animated radial-gradient streak on card borders
+    // Applies to all card/bordered elements
+    // -------------------------------------------------------
+    function applyStarBorder(el) {
+        el.classList.add('star-border-container');
+
+        // Wrap existing children in .star-inner so they sit above the gradients
+        const inner = document.createElement('div');
+        inner.className = 'star-inner';
+        while (el.firstChild) inner.appendChild(el.firstChild);
+
+        const color = 'var(--accent)';
+        const speed = '6s';
+
+        const gradBottom = document.createElement('div');
+        gradBottom.className = 'border-gradient-bottom';
+        gradBottom.style.background = `radial-gradient(circle, ${color}, transparent 10%)`;
+        gradBottom.style.animationDuration = speed;
+
+        const gradTop = document.createElement('div');
+        gradTop.className = 'border-gradient-top';
+        gradTop.style.background = `radial-gradient(circle, ${color}, transparent 10%)`;
+        gradTop.style.animationDuration = speed;
+
+        el.appendChild(gradBottom);
+        el.appendChild(gradTop);
+        el.appendChild(inner);
+    }
+
+    ['.services .service-item', '.logo-item-placeholder'].forEach(selector => {
+        document.querySelectorAll(selector).forEach(applyStarBorder);
+    });
+
+    // Non-destructive variant: only prepends the gradient overlays without
+    // restructuring DOM (safe for forms and complex layouts)
+    function applyStarBorderSafe(el) {
+        el.classList.add('star-border-container');
+        const color = 'var(--accent)';
+        const speed = '6s';
+
+        const gradBottom = document.createElement('div');
+        gradBottom.className = 'border-gradient-bottom';
+        gradBottom.style.cssText = `background:radial-gradient(circle,${color},transparent 10%);animation-duration:${speed};pointer-events:none;`;
+
+        const gradTop = document.createElement('div');
+        gradTop.className = 'border-gradient-top';
+        gradTop.style.cssText = `background:radial-gradient(circle,${color},transparent 10%);animation-duration:${speed};pointer-events:none;`;
+
+        el.insertBefore(gradBottom, el.firstChild);
+        el.insertBefore(gradTop, el.firstChild);
+    }
+
+    ['.partner-form-wrapper', '.cta-card'].forEach(selector => {
+        document.querySelectorAll(selector).forEach(applyStarBorderSafe);
+    });
 });
