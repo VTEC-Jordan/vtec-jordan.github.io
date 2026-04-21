@@ -788,8 +788,18 @@ select:focus-visible {
 
 .contact-methods {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.contact-methods .btn {
+    flex: 1;
+    text-align: center;
+    max-width: 140px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
 }
 
 .contact-link {
@@ -857,61 +867,71 @@ select:focus-visible {
    SECTION: FOOTER
    ======================================== */
 .footer {
-    padding: var(--space-lg) 0;
+    padding: var(--space-md) 0;
     border-top: 1px solid var(--border);
     background-color: var(--bg);
 }
 
-.footer-main {
+.footer-inner {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--space-lg);
-}
-
-.footer-brand {
-    max-width: 300px;
+    align-items: center;
+    gap: var(--space-md);
 }
 
 .footer-logo {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    display: block;
-    margin-bottom: var(--space-sm);
+    flex-shrink: 0;
 }
 
-.footer-nav {
-    display: flex;
-    gap: var(--space-xl);
-}
-
-.footer-nav h4 {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: var(--space-sm);
-}
-
-.footer-nav ul li {
-    margin-bottom: 0.5rem;
-}
-
-.footer-nav ul li a {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-}
-
-.footer-nav ul li a:hover {
-    color: var(--accent);
-}
-
-.footer-bottom {
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
+.footer-tagline {
     font-size: 0.85rem;
     color: var(--text-muted);
+    flex: 1;
 }
+
+.footer-icons {
+    display: flex;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+}
+
+.footer-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.footer-icon-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.footer-copy {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .footer-inner {
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+    }
+    .footer-tagline {
+        flex-basis: 100%;
+    }
+    .footer-copy {
+        flex-basis: 100%;
+    }
+}
+
 
 /* ========================================
    SECTION: PAGE-SPECIFIC STYLES
@@ -1109,10 +1129,6 @@ select:focus-visible {
         border-top-color: rgba(255, 255, 255, 0.08);
     }
     
-    .footer-main {
-        flex-direction: column;
-        gap: var(--space-lg);
-    }
 }
 
 @media (max-width: 768px) {
@@ -1153,11 +1169,6 @@ select:focus-visible {
         grid-column: span 1 !important;
     }
     
-    .footer-nav {
-        flex-direction: column;
-        gap: var(--space-md);
-    }
-
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -1194,20 +1205,6 @@ select:focus-visible {
 
     .hero-description {
         font-size: 1rem;
-    }
-
-    .services-slider {
-        gap: var(--space-sm);
-    }
-
-    .workshop-slider {
-        gap: var(--space-sm);
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-        gap: var(--space-xs);
-        text-align: center;
     }
 }
 

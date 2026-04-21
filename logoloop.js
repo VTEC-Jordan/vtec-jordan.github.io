@@ -60,6 +60,7 @@
           img.loading = 'lazy';
           img.draggable = false;
           li.appendChild(img);
+        }
         ul.appendChild(li);
       }
       return ul;
