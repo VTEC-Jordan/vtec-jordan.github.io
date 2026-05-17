@@ -16,7 +16,6 @@
 
     <!-- Security & CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()">
 
@@ -57,34 +56,9 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css?v=20260423">
     
-    <!-- Import map for Three.js + Postprocessing ES modules -->
-    <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
-        "postprocessing": "https://cdn.jsdelivr.net/npm/postprocessing@6.36.3/build/index.js"
-      }
-    }
-    </script>
-
-    <!-- GSAP — skipped on reduced-motion or slow connections -->
-    <script>
-      (function(){
-        var pref=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-        var nav=navigator.connection||navigator.mozConnection;
-        var slow=nav&&(nav.saveData||['slow-2g','2g','3g'].includes(nav.effectiveType));
-        if(!pref&&!slow){
-          ['https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js',
-           'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js'
-          ].forEach(function(src){var s=document.createElement('script');s.src=src;document.head.appendChild(s);});
-        }
-      })();
-    </script>
-
     <!-- JS -->
     <script defer src="script.js?v=20260423"></script>
     <script defer src="logoloop.js?v=20260423"></script>
-    <script type="module" src="hyperspeed-init.js?v=20260423"></script>
 
     <!-- Structured Data: Organization schema for Google rich results -->
     <script type="application/ld+json">
@@ -103,7 +77,7 @@
     }
     </script>
 </head>
-<body>
+<body class="home-page">
 
     <header id="header" class="header">
         <!-- Section: Navigation - Sticky header with mobile menu and theme toggle -->
@@ -139,18 +113,19 @@
         </div>
     </header>
 
-<main>
-  <!-- Section: Hero - Main value proposition and primary call to action -->
-  <section class="hero" id="hero">
-    <div id="hero-hyperspeed" class="hero-hyperspeed-bg"></div>
-    <div class="hero-overlay"></div>
+<main class="home-main">
+  <canvas class="shader-bg" id="shader-bg" aria-hidden="true"></canvas>
+
+  <!-- Section: Hero -->
+  <section class="hero hero-background-paths" id="hero">
     <div class="container">
       <div class="hero-content">
-        <h1 class="hero-title">Senior engineering for products that scale.</h1>
+        <h1 class="hero-title hero-title-gradient">Senior engineering for products that scale.</h1>
         <p class="hero-description">VTEC builds web apps, mobile products, scalable systems, and technical infrastructure for startups and companies in Jordan. Production-ready delivery from Amman.</p>
         <div class="hero-btns">
-          <a href="#contact" class="btn btn-primary">Start project</a>
-          <a href="#services" class="btn btn-secondary">See services</a>
+          <a href="#contact" class="btn btn-primary" aria-label="Discover excellence with VTEC">
+            Discover Excellence
+          </a>
         </div>
       </div>
     </div>

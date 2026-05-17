@@ -169,15 +169,49 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------
     const mobileNavToggle = document.getElementById('mobile-nav-toggle');
     const navMenu = document.getElementById('nav-menu');
+
+    function closeMobileMenu() {
+        if (!navMenu || !mobileNavToggle) return;
+        navMenu.classList.remove('active');
+        mobileNavToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    function openMobileMenu() {
+        if (!navMenu || !mobileNavToggle) return;
+        navMenu.classList.add('active');
+        mobileNavToggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    }
+
     if (mobileNavToggle && navMenu) {
         mobileNavToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
             const isExpanded = navMenu.classList.contains('active');
-            mobileNavToggle.setAttribute('aria-expanded', isExpanded);
             if (isExpanded) {
-                document.body.style.overflow = 'hidden';
+                closeMobileMenu();
             } else {
-                document.body.style.overflow = '';
+                openMobileMenu();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!navMenu.classList.contains('active')) return;
+            const clickedInsideMenu = navMenu.contains(event.target);
+            const clickedToggle = mobileNavToggle.contains(event.target);
+            if (!clickedInsideMenu && !clickedToggle) {
+                closeMobileMenu();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
             }
         });
     }
@@ -187,11 +221,20 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             if (navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                mobileNavToggle.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = '';
+                closeMobileMenu();
             }
         });
+    });
+
+    // Mark current top-level page in nav for orientation.
+    const pagePath = window.location.pathname.replace(/\/$/, '');
+    navLinks.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.includes('/#')) return;
+        const normalizedHref = href.startsWith('/') ? href : '/' + href;
+        if (normalizedHref.replace(/\/$/, '') === pagePath) {
+            link.setAttribute('aria-current', 'page');
+        }
     });
 
     // -------------------------------------------------------
@@ -298,6 +341,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
+    function setStatusMessage(statusEl, message, type) {
+        if (!statusEl) return;
+        statusEl.classList.remove('status-success', 'status-error');
+        statusEl.textContent = message;
+        if (type === 'success') statusEl.classList.add('status-success');
+        if (type === 'error') statusEl.classList.add('status-error');
+    }
+
+    function markFieldValidity(fieldEl, isValid) {
+        if (!fieldEl) return;
+        fieldEl.setAttribute('aria-invalid', String(!isValid));
+    }
+
+    function wireValidationFeedback(formEl) {
+        if (!formEl) return;
+        formEl.querySelectorAll('input, textarea, select').forEach((el) => {
+            if (el.name === 'website') return;
+            el.addEventListener('blur', () => {
+                const valid = el.checkValidity();
+                markFieldValidity(el, valid);
+            });
+            el.addEventListener('input', () => {
+                if (el.getAttribute('aria-invalid') === 'true') {
+                    markFieldValidity(el, el.checkValidity());
+                }
+            });
+        });
+    }
+
     // -------------------------------------------------------
     // Form Submission Handlers
     // Integrates with Google Apps Script Web App for data persistence
@@ -312,11 +384,11 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
+        wireValidationFeedback(contactForm);
         contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formStatus = document.getElementById('form-status');
-            formStatus.textContent = 'Sending...';
-            formStatus.style.color = '';
+            setStatusMessage(formStatus, 'Sending...');
 
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -324,8 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Sending...';
 
             if (isLikelyBotSubmission(contactForm)) {
-                formStatus.textContent = "Message received! We'll be in touch soon.";
-                formStatus.style.color = 'var(--color-success, green)';
+                setStatusMessage(formStatus, "Message received! We'll be in touch soon.", 'success');
                 contactForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
@@ -336,9 +407,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = cleanInput(document.getElementById('email').value, 254).toLowerCase();
             const message = cleanInput(document.getElementById('message').value, 2000);
 
+            markFieldValidity(document.getElementById('name'), Boolean(name));
+            markFieldValidity(document.getElementById('email'), isValidEmail(email));
+            markFieldValidity(document.getElementById('message'), Boolean(message));
+
             if (!name || !isValidEmail(email) || !message) {
-                formStatus.textContent = 'Please provide a valid name, email, and message.';
-                formStatus.style.color = 'var(--color-error, red)';
+                setStatusMessage(formStatus, 'Please provide a valid name, email, and message.', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
                 return;
@@ -353,15 +427,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: payload
             })
             .then(() => {
-                formStatus.textContent = "Message received! We'll be in touch soon.";
-                formStatus.style.color = 'var(--color-success, green)';
+                setStatusMessage(formStatus, "Message received! We'll be in touch soon.", 'success');
                 contactForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
             })
             .catch(() => {
-                formStatus.textContent = 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com';
-                formStatus.style.color = 'var(--color-error, red)';
+                setStatusMessage(formStatus, 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
             });
@@ -374,11 +446,11 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const partnerForm = document.getElementById('partner-form');
     if (partnerForm) {
+        wireValidationFeedback(partnerForm);
         partnerForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formStatus = document.getElementById('partner-form-status');
-            formStatus.textContent = 'Sending...';
-            formStatus.style.color = '';
+            setStatusMessage(formStatus, 'Sending...');
 
             const submitBtn = partnerForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -386,8 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Sending...';
 
             if (isLikelyBotSubmission(partnerForm)) {
-                formStatus.textContent = 'Inquiry received! We\'ll be in touch within 2 business days.';
-                formStatus.style.color = 'var(--color-success, green)';
+                setStatusMessage(formStatus, 'Inquiry received! We\'ll be in touch within 2 business days.', 'success');
                 partnerForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
@@ -401,9 +472,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const partnershipType = cleanInput(document.getElementById('partnership-type').value, 80);
             const message         = cleanInput(document.getElementById('message').value, 3000);
 
+            markFieldValidity(document.getElementById('company-name'), Boolean(companyName));
+            markFieldValidity(document.getElementById('contact-name'), Boolean(contactName));
+            markFieldValidity(document.getElementById('email'), isValidEmail(email));
+            markFieldValidity(document.getElementById('partnership-type'), Boolean(partnershipType));
+            markFieldValidity(document.getElementById('message'), Boolean(message));
+
             if (!companyName || !contactName || !isValidEmail(email) || !partnershipType || !message) {
-                formStatus.textContent = 'Please complete all required fields with valid information.';
-                formStatus.style.color = 'var(--color-error, red)';
+                setStatusMessage(formStatus, 'Please complete all required fields with valid information.', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
                 return;
@@ -419,8 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.result === 'success') {
-                    formStatus.textContent = 'Inquiry received! We\'ll be in touch within 2 business days.';
-                    formStatus.style.color = 'var(--color-success, green)';
+                    setStatusMessage(formStatus, 'Inquiry received! We\'ll be in touch within 2 business days.', 'success');
                     partnerForm.reset();
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalBtnText;
@@ -429,8 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(() => {
-                formStatus.textContent = 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com';
-                formStatus.style.color = 'var(--color-error, red)';
+                setStatusMessage(formStatus, 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
             });
@@ -443,11 +517,11 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const workshopForm = document.getElementById('workshop-form');
     if (workshopForm) {
+        wireValidationFeedback(workshopForm);
         workshopForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formStatus = document.getElementById('workshop-form-status');
-            formStatus.textContent = 'Sending...';
-            formStatus.style.color = '';
+            setStatusMessage(formStatus, 'Sending...');
 
             const submitBtn = workshopForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -455,8 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Sending...';
 
             if (isLikelyBotSubmission(workshopForm)) {
-                formStatus.textContent = 'Registration received! We\'ll be in touch with workshop details soon.';
-                formStatus.style.color = 'var(--color-success, green)';
+                setStatusMessage(formStatus, 'Registration received! We\'ll be in touch with workshop details soon.', 'success');
                 workshopForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
@@ -472,9 +545,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const participants      = cleanInput(document.getElementById('workshop-participants').value, 10);
             const message           = cleanInput(document.getElementById('workshop-message').value, 3000);
 
+            markFieldValidity(document.getElementById('workshop-name'), Boolean(name));
+            markFieldValidity(document.getElementById('workshop-email'), isValidEmail(email));
+            markFieldValidity(document.getElementById('workshop-interest'), Boolean(workshopInterest));
+
             if (!name || !isValidEmail(email) || !workshopInterest) {
-                formStatus.textContent = 'Please complete all required fields with valid information.';
-                formStatus.style.color = 'var(--color-error, red)';
+                setStatusMessage(formStatus, 'Please complete all required fields with valid information.', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
                 return;
@@ -490,8 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.result === 'success') {
-                    formStatus.textContent = 'Registration received! We\'ll be in touch with workshop details soon.';
-                    formStatus.style.color = 'var(--color-success, green)';
+                    setStatusMessage(formStatus, 'Registration received! We\'ll be in touch with workshop details soon.', 'success');
                     workshopForm.reset();
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalBtnText;
@@ -500,8 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(() => {
-                formStatus.textContent = 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com';
-                formStatus.style.color = 'var(--color-error, red)';
+                setStatusMessage(formStatus, 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
             });
@@ -509,111 +583,140 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------
-    // GSAP Animations
-    // Hero: SplitText char-by-char fade-in (on load)
-    // Sections below services: ScrollFloat scroll-scrub char animation
-    // Excludes service card content (.service-item)
+    // Animated Shader Background
+    // Vanilla JS/WebGL2 adaptation of 21st.dev/r/ravikatiyar162/animated-shader-hero
+    // Shader by Matthias Hurrle (@atzedent) — tinted to VTEC accent palette.
     // -------------------------------------------------------
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-        gsap.registerPlugin(ScrollTrigger);
+    (function initShaderBg() {
+        const canvas = document.getElementById('shader-bg');
+        if (!canvas) return;
 
-        // Split an element's plain text into individual .anim-char <span>s,
-        // wrapped in word containers so line breaks only occur between words.
-        // Sets aria-label on the element so screen readers still read the full text.
-        function splitChars(el) {
-            const text = el.textContent;
-            el.setAttribute('aria-label', text);
-            el.textContent = '';
-            const words = text.split(' ');
-            words.forEach((word, wi) => {
-                const wordSpan = document.createElement('span');
-                wordSpan.style.display = 'inline-block';
-                wordSpan.style.whiteSpace = 'nowrap';
-                [...word].forEach(char => {
-                    const span = document.createElement('span');
-                    span.className = 'anim-char';
-                    span.textContent = char;
-                    wordSpan.appendChild(span);
-                });
-                el.appendChild(wordSpan);
-                if (wi < words.length - 1) {
-                    const space = document.createElement('span');
-                    space.className = 'anim-char';
-                    space.style.display = 'inline-block';
-                    space.textContent = '\u00A0';
-                    el.appendChild(space);
-                }
-            });
-            return el.querySelectorAll('.anim-char');
+        const gl = canvas.getContext('webgl2');
+        if (!gl) { canvas.style.display = 'none'; return; }
+
+        const vertSrc = `#version 300 es
+precision highp float;
+in vec4 position;
+void main(){ gl_Position = position; }`;
+
+        const fragSrc = `#version 300 es
+precision highp float;
+out vec4 O;
+uniform vec2 resolution;
+uniform float time;
+#define FC gl_FragCoord.xy
+#define T time
+#define R resolution
+#define MN min(R.x,R.y)
+float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract(p.x*p.y);}
+float noise(in vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);float a=rnd(i),b=rnd(i+vec2(1,0)),c=rnd(i+vec2(0,1)),d=rnd(i+1.);return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);}
+float fbm(vec2 p){float t=.0,a=1.;mat2 m=mat2(1.,-.5,.2,1.2);for(int i=0;i<5;i++){t+=a*noise(p);p*=2.*m;a*=.5;}return t;}
+float clouds(vec2 p){float d=1.,t=.0;for(float i=.0;i<3.;i++){float a=d*fbm(i*10.+p*.2+.2*(1.+i)*p.y+d+i*i+p);t=mix(t,d,a);d=a;p*=2./(i+1.);}return t;}
+void main(void){
+  vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
+  vec3 col=vec3(0);
+  float bg=clouds(vec2(st.x+T*.5,-st.y));
+  uv*=1.-.3*(sin(T*.2)*.5+.5);
+  for(float i=1.;i<12.;i++){
+    uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.5+.1*uv.x);
+    vec2 p=uv;
+    float d=length(p);
+    // VTEC teal: accent #006D77 = vec3(0.0, 0.427, 0.467)
+    col+=.00125/d*(cos(sin(i)*vec3(0.0,0.427,0.467))+1.);
+    float b=noise(i+p+bg*1.731);
+    col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));
+    col=mix(col,vec3(bg*.0,bg*.137,bg*.12),d);
+  }
+  O=vec4(col,1);
+}`;
+
+        function compile(shader, src) {
+            gl.shaderSource(shader, src);
+            gl.compileShader(shader);
         }
 
-        // ---- Hero: SplitText fade-in (power3.out, staggered chars) ----
-        const heroTitle = document.querySelector('.hero-title');
-        const heroDesc  = document.querySelector('.hero-description');
+        const vs = gl.createShader(gl.VERTEX_SHADER);
+        const fs = gl.createShader(gl.FRAGMENT_SHADER);
+        compile(vs, vertSrc);
+        compile(fs, fragSrc);
 
-        if (heroTitle) {
-            const chars = splitChars(heroTitle);
-            gsap.fromTo(chars,
-                { opacity: 0, y: 40 },
-                { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.025, delay: 0.2, force3D: true }
-            );
+        const prog = gl.createProgram();
+        gl.attachShader(prog, vs);
+        gl.attachShader(prog, fs);
+        gl.linkProgram(prog);
+
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+            console.warn('Shader link failed:', gl.getProgramInfoLog(prog));
+            canvas.style.display = 'none';
+            return;
         }
 
-        if (heroDesc) {
-            const chars = splitChars(heroDesc);
-            gsap.fromTo(chars,
-                { opacity: 0, y: 40 },
-                { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.012, delay: 0.7, force3D: true }
-            );
+        const buf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+
+        const pos = gl.getAttribLocation(prog, 'position');
+        gl.enableVertexAttribArray(pos);
+        gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+        const uRes  = gl.getUniformLocation(prog, 'resolution');
+        const uTime = gl.getUniformLocation(prog, 'time');
+
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+            canvas.width  = window.innerWidth  * dpr;
+            canvas.height = window.innerHeight * dpr;
+            gl.viewport(0, 0, canvas.width, canvas.height);
         }
 
-        // ---- ScrollFloat: same style as hero, triggered on scroll ----
-        function applyScrollFloat(el) {
-            const chars = splitChars(el);
-            gsap.fromTo(chars,
-                { opacity: 0, y: 40 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5,
-                    ease: 'power3.out',
-                    stagger: 0.012,
-                    force3D: true,
-                    scrollTrigger: {
-                        trigger: el,
-                        start: 'top 88%',
-                        once: true
-                    }
-                }
-            );
+        resize();
+        window.addEventListener('resize', resize, { passive: true });
+
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) { canvas.style.display = 'none'; return; }
+
+        let raf;
+        function loop(now) {
+            gl.useProgram(prog);
+            gl.uniform2f(uRes, canvas.width, canvas.height);
+            gl.uniform1f(uTime, now * 1e-3);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            raf = requestAnimationFrame(loop);
         }
 
-        // Simple fade-up for elements that contain child markup (strong, em, etc.)
-        function applyFadeIn(el) {
-            gsap.fromTo(el,
-                { opacity: 0, y: 20 },
-                {
-                    opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
-                    scrollTrigger: { trigger: el, start: 'top 88%', once: true }
-                }
-            );
-        }
+        raf = requestAnimationFrame(loop);
 
-        // Selectors for ScrollFloat — about section and everything from services down,
-        // deliberately excluding .service-item content (the cards shown in the slider).
-        const scrollFloatTargets = [];
-
-        scrollFloatTargets.forEach(selector => {
-            document.querySelectorAll(selector).forEach(el => {
-                // Only split elements that contain plain text (no child elements)
-                if (el.childElementCount === 0) {
-                    applyScrollFloat(el);
-                } else {
-                    applyFadeIn(el);
-                }
-            });
+        // Pause when page is hidden to save battery
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) { cancelAnimationFrame(raf); }
+            else { raf = requestAnimationFrame(loop); }
         });
-    } // end gsap if block
+    })();
+
+    // -------------------------------------------------------
+    // Hero Entrance Animation
+    // Replaces split-character text animation with a cleaner premium reveal.
+    // -------------------------------------------------------
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent) {
+        const revealItems = Array.from(heroContent.querySelectorAll('.hero-title, .hero-description, .hero-btns, .section-label'));
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReduced) {
+            heroContent.classList.add('hero-reveal-ready');
+            revealItems.forEach((item) => {
+                item.style.transitionDelay = '0ms';
+            });
+        } else {
+            revealItems.forEach((item, index) => {
+                item.style.transitionDelay = `${260 + index * 190}ms`;
+            });
+
+            requestAnimationFrame(() => {
+                heroContent.classList.add('hero-reveal-ready');
+            });
+        }
+    }
 
 
     // -------------------------------------------------------

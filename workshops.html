@@ -15,7 +15,6 @@
 
     <!-- Security -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()">
 
@@ -117,11 +116,10 @@
         </div>
     </header>
 
-    <main>
+    <main class="home-main">
+        <canvas class="shader-bg" id="shader-bg" aria-hidden="true"></canvas>
         <!-- Section: Hero - Workshop catalog value proposition -->
-        <section class="hero" id="hero">
-            <div id="workshops-beams" class="hero-hyperspeed-bg"></div>
-            <div class="hero-overlay"></div>
+        <section class="hero hero-background-paths" id="hero">
             <div class="container">
                 <div class="hero-content">
                     <h1 class="hero-title">Technical Workshops That Solve Real Delivery Problems</h1>
@@ -167,7 +165,7 @@
         </section>
 
         <!-- Section: Workshop Catalog - List of available technical training programs -->
-        <section class="section workshop-catalog alternate-bg" id="workshop-catalog">
+        <section class="section workshop-catalog" id="workshop-catalog">
             <div class="container">
                 <div class="section-header centered">
                     <span class="section-label">Available Workshops</span>
