@@ -15,12 +15,10 @@
     <link rel="alternate" hreflang="en" href="https://www.vtec-jo.com/">
 
     <!-- Security & CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()">
-    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
     <!-- SEO & Social -->
     <meta property="og:type" content="website">
@@ -366,17 +364,21 @@
                         <!-- Form configuration: Submission is intercepted by script.js and sent to Google Apps Script -->
                         <form id="contact-form">
                             <p class="form-title">Send a Message</p>
+                          <div class="hp-field" aria-hidden="true">
+                            <label for="website-contact">Website</label>
+                            <input type="text" id="website-contact" name="website" tabindex="-1" autocomplete="off">
+                          </div>
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" id="name" name="name" required aria-required="true" placeholder="e.g., Dana Abu-Hamad">
+                            <input type="text" id="name" name="name" required aria-required="true" autocomplete="name" maxlength="120" placeholder="e.g., Dana Abu-Hamad">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required aria-required="true" placeholder="e.g., dana@example.com">
+                            <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" inputmode="email" maxlength="254" placeholder="e.g., dana@example.com">
                             </div>
                             <div class="form-group">
                                 <label for="message">Message</label>
-                                <textarea id="message" name="message" rows="4" required aria-required="true" placeholder="How can we help you?"></textarea>
+                            <textarea id="message" name="message" rows="4" required aria-required="true" maxlength="2000" placeholder="How can we help you?"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Send Inquiry</button>
                             <p class="form-status" id="form-status" aria-live="polite"></p>

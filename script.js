@@ -251,7 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------
     const themeToggle = document.getElementById('theme-toggle');
     const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    let currentTheme = localStorage.getItem('theme');
+    let currentTheme = null;
+
+    try {
+        currentTheme = localStorage.getItem('theme');
+    } catch (e) {
+        currentTheme = null;
+    }
     
     // Default to system preference if no stored theme
     if (!currentTheme) {
@@ -267,9 +273,29 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggle.addEventListener('click', () => {
             let newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+            try {
+                localStorage.setItem('theme', newTheme);
+            } catch (e) {
+                // Ignore storage failures in strict privacy modes.
+            }
             themeToggle.setAttribute('aria-pressed', newTheme === 'dark');
         });
+    }
+
+    const CONTROL_CHARS_REGEX = /[\u0000-\u001F\u007F]/g;
+
+    function cleanInput(value, maxLength) {
+        if (typeof value !== 'string') return '';
+        return value.replace(CONTROL_CHARS_REGEX, '').trim().slice(0, maxLength);
+    }
+
+    function isLikelyBotSubmission(formEl) {
+        const honeypot = formEl.querySelector('input[name="website"]');
+        return Boolean(honeypot && honeypot.value.trim());
+    }
+
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     // -------------------------------------------------------
@@ -297,9 +323,27 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
 
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
+            if (isLikelyBotSubmission(contactForm)) {
+                formStatus.textContent = "Message received! We'll be in touch soon.";
+                formStatus.style.color = 'var(--color-success, green)';
+                contactForm.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+                return;
+            }
+
+            const name = cleanInput(document.getElementById('name').value, 120);
+            const email = cleanInput(document.getElementById('email').value, 254).toLowerCase();
+            const message = cleanInput(document.getElementById('message').value, 2000);
+
+            if (!name || !isValidEmail(email) || !message) {
+                formStatus.textContent = 'Please provide a valid name, email, and message.';
+                formStatus.style.color = 'var(--color-error, red)';
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+                return;
+            }
+
             const payload = JSON.stringify({ name, email, message });
 
             fetch(CONTACT_SCRIPT_URL, {
@@ -341,12 +385,29 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
 
-            const companyName     = document.getElementById('company-name').value.trim();
-            const contactName     = document.getElementById('contact-name').value.trim();
-            const email           = document.getElementById('email').value.trim();
-            const phone           = document.getElementById('phone').value.trim();
-            const partnershipType = document.getElementById('partnership-type').value;
-            const message         = document.getElementById('message').value.trim();
+            if (isLikelyBotSubmission(partnerForm)) {
+                formStatus.textContent = 'Inquiry received! We\'ll be in touch within 2 business days.';
+                formStatus.style.color = 'var(--color-success, green)';
+                partnerForm.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+                return;
+            }
+
+            const companyName     = cleanInput(document.getElementById('company-name').value, 150);
+            const contactName     = cleanInput(document.getElementById('contact-name').value, 120);
+            const email           = cleanInput(document.getElementById('email').value, 254).toLowerCase();
+            const phone           = cleanInput(document.getElementById('phone').value, 32);
+            const partnershipType = cleanInput(document.getElementById('partnership-type').value, 80);
+            const message         = cleanInput(document.getElementById('message').value, 3000);
+
+            if (!companyName || !contactName || !isValidEmail(email) || !partnershipType || !message) {
+                formStatus.textContent = 'Please complete all required fields with valid information.';
+                formStatus.style.color = 'var(--color-error, red)';
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+                return;
+            }
 
             const payload = JSON.stringify({ companyName, contactName, email, phone, partnershipType, message });
 
@@ -393,14 +454,31 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
 
-            const name              = document.getElementById('workshop-name').value.trim();
-            const email             = document.getElementById('workshop-email').value.trim();
-            const phone             = document.getElementById('workshop-phone').value.trim();
-            const organization      = document.getElementById('workshop-organization').value.trim();
-            const workshopInterest  = document.getElementById('workshop-interest').value;
-            const preferredTiming   = document.getElementById('workshop-timing').value.trim();
-            const participants      = document.getElementById('workshop-participants').value.trim();
-            const message           = document.getElementById('workshop-message').value.trim();
+            if (isLikelyBotSubmission(workshopForm)) {
+                formStatus.textContent = 'Registration received! We\'ll be in touch with workshop details soon.';
+                formStatus.style.color = 'var(--color-success, green)';
+                workshopForm.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+                return;
+            }
+
+            const name              = cleanInput(document.getElementById('workshop-name').value, 120);
+            const email             = cleanInput(document.getElementById('workshop-email').value, 254).toLowerCase();
+            const phone             = cleanInput(document.getElementById('workshop-phone').value, 32);
+            const organization      = cleanInput(document.getElementById('workshop-organization').value, 150);
+            const workshopInterest  = cleanInput(document.getElementById('workshop-interest').value, 120);
+            const preferredTiming   = cleanInput(document.getElementById('workshop-timing').value, 120);
+            const participants      = cleanInput(document.getElementById('workshop-participants').value, 10);
+            const message           = cleanInput(document.getElementById('workshop-message').value, 3000);
+
+            if (!name || !isValidEmail(email) || !workshopInterest) {
+                formStatus.textContent = 'Please complete all required fields with valid information.';
+                formStatus.style.color = 'var(--color-error, red)';
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+                return;
+            }
 
             const payload = JSON.stringify({ name, email, phone, organization, workshopInterest, preferredTiming, participants, message });
 
