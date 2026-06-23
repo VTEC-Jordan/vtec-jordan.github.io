@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>How We Work | Engagement Models & Pricing | VTEC</title>
+    <meta name="description" content="VTEC offers three consulting engagement tracks: hourly consulting, monthly retainer, and venture building partnership. Choose the model that fits your stage and goals.">
+    <meta name="keywords" content="technology consulting pricing, venture building partnership, hourly consulting, monthly retainer, VTEC engagement models">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="language" content="English">
+    <link rel="canonical" href="https://www.vtec-jo.com/how-we-work.html">
+    <link rel="alternate" hreflang="en" href="https://www.vtec-jo.com/how-we-work.html">
+
+    <!-- Security -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()">
+
+    <!-- SEO & Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.vtec-jo.com/how-we-work.html">
+    <meta property="og:site_name" content="VTEC">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="How We Work | Engagement Models & Pricing | VTEC">
+    <meta property="og:description" content="Three consulting engagement tracks designed for different stages: hourly consulting, monthly retainer, and venture building partnership.">
+    <meta property="og:image" content="https://www.vtec-jo.com/assets/og-image.png?v=20260423-logo4">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@vtecjo">
+    <meta name="twitter:title" content="How We Work | VTEC">
+    <meta name="twitter:description" content="Three consulting engagement tracks designed for different stages and goals — from a single strategy session to a full venture-building partnership.">
+    <meta name="twitter:image" content="https://www.vtec-jo.com/assets/og-image.png?v=20260423-logo4">
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon-untitled-16.png?v=3" type="image/png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="style.css?v=20260423" as="style">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#FDFCFB" media="(prefers-color-scheme: light)">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=20260423">
+
+    <!-- Page-specific styles -->
+    <style>
+        .tracks-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto auto auto auto auto;
+            gap: var(--space-md);
+        }
+
+        .track-card {
+            display: grid;
+            grid-template-rows: subgrid;
+            grid-row: span 6;
+            padding: var(--space-md) var(--space-sm);
+        }
+
+        .track-footer {
+            align-self: end;
+            text-align: center;
+        }
+
+        .track-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+
+        .track-num {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .track-badge {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+        }
+
+        .track-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            letter-spacing: -0.02em;
+        }
+
+        .track-audience {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .track-includes-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: var(--space-sm);
+        }
+
+        .track-includes {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 var(--space-md) 0;
+        }
+
+        .track-includes li {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            padding: 5px 0;
+            padding-left: 1.1rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .track-includes li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 0.85rem;
+            top: 5px;
+        }
+
+        .track-model {
+            margin-bottom: var(--space-md);
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: var(--text);
+            text-align: center;
+        }
+
+        .track-model-label {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .tracks-intro {
+            max-width: 640px;
+            margin: 0 auto var(--space-lg);
+            text-align: center;
+        }
+
+        .tracks-intro p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.65;
+        }
+
+        .comparison-note {
+            margin-top: var(--space-lg);
+            padding: var(--space-md) 0 0;
+            border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+            text-align: center;
+        }
+
+        .comparison-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .comparison-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .comparison-item .comparison-label {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 960px) {
+            .tracks-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: none;
+            }
+            .track-card {
+                grid-template-rows: auto auto auto auto auto auto;
+                padding-bottom: var(--space-lg);
+            }
+            .track-card:not(:last-child) {
+                border-bottom: 1px solid var(--border);
+            }
+            .comparison-note {
+                grid-template-columns: 1fr;
+                gap: var(--space-sm);
+            }
+            .track-card.featured {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .track-card {
+                padding: var(--space-sm) 0;
+            }
+        }
+    </style>
+
+    <!-- JS -->
+    <script defer src="script.js?v=20260423"></script>
+    <script defer src="silk-init.js"></script>
+</head>
+<body>
+
+    <header id="header" class="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="index.html" class="logo" aria-label="VTEC Home">
+                    <span class="logo-text" aria-hidden="true">
+                        <img class="brand-logo-svg" src="assets/videos-images/logo-3-clean.svg?v=20260423" alt="VTEC logo" width="172" height="172">
+                    </span>
+                </a>
+                <nav class="nav" id="nav-menu" aria-label="Main navigation">
+                    <ul class="nav-list">
+                        <li><a href="index.html#hero" class="nav-link">Home</a></li>
+                        <li><a href="index.html#services" class="nav-link">What We Do</a></li>
+                        <li><a href="how-we-work.html" class="nav-link" aria-current="page">How We Work</a></li>
+                        <li><a href="workshops.html" class="nav-link">Workshops</a></li>
+                        <li><a href="partner.html" class="nav-link">Partner with us</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a href="index.html#contact" class="btn btn-primary btn-sm">Contact Us</a>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="home-main">
+        <canvas class="shader-bg" id="shader-bg" aria-hidden="true"></canvas>
+
+        <!-- Hero -->
+        <section class="hero hero-background-paths" id="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="section-label">Engagement Models</span>
+                    <h1 class="hero-title">Three tracks. One direction.</h1>
+                    <p class="hero-description">Whether you need a focused strategy session, a long-term advisory partner, or a team that builds alongside you. VTEC structures each engagement around what actually moves your business forward.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intro -->
+        <section class="section" id="tracks-intro">
+            <div class="container">
+                <div class="section-header centered">
+                    <span class="section-label">Consulting & Venture Building</span>
+                    <h2 class="section-title">How we engage</h2>
+                </div>
+                <div class="tracks-intro">
+                    <p>VTEC's consulting and venture-building service area is structured around three engagement tracks. Each is designed for a different relationship type, commitment level, and business stage. Pick the one that fits where you are, or reach out and we'll help you decide.</p>
+                </div>
+
+                <!-- Three Track Cards -->
+                <div class="tracks-grid">
+
+                    <!-- Track 1: Hourly -->
+                    <div class="track-card">
+                        <div class="track-header">
+                            <span class="track-num">Track 01</span>
+                            <span class="track-badge">Pay As You Go</span>
+                        </div>
+                        <h2 class="track-title">Hourly Consulting</h2>
+                        <p class="track-audience">For organizations that need expert guidance on a specific challenge or a short-term initiative, without a long-term commitment.</p>
+
+                        <p class="track-includes-label">Typical work includes</p>
+                        <ul class="track-includes">
+                            <li>Product strategy reviews</li>
+                            <li>Technology assessments</li>
+                            <li>Digital transformation planning</li>
+                            <li>Startup mentoring</li>
+                            <li>Product roadmap development</li>
+                            <li>Team coaching</li>
+                        </ul>
+
+                        <div class="track-footer">
+                            <div class="track-model">
+                                <span class="track-model-label">Engagement model</span>
+                                Billed per hour. Start with a defined problem, engage as needed. No minimum commitment. You pay for the time you use.
+                            </div>
+
+                            <a href="partner.html" class="btn btn-secondary">Get started</a>
+                        </div>
+                    </div>
+
+                    <!-- Track 2: Retainer -->
+                    <div class="track-card">
+                        <div class="track-header">
+                            <span class="track-num">Track 02</span>
+                            <span class="track-badge">Monthly Retainer</span>
+                        </div>
+                        <h2 class="track-title">Strategic Retainer</h2>
+                        <p class="track-audience">For companies that need ongoing strategic support without the cost or overhead of hiring a full-time executive or product team.</p>
+
+                        <p class="track-includes-label">Typical work includes</p>
+                        <ul class="track-includes">
+                            <li>Product management advisory</li>
+                            <li>CTO or product leadership support</li>
+                            <li>Product roadmap planning</li>
+                            <li>Technology strategy</li>
+                            <li>Process improvement</li>
+                            <li>Team mentoring</li>
+                            <li>Stakeholder management support</li>
+                        </ul>
+
+                        <div class="track-footer">
+                            <div class="track-model">
+                                <span class="track-model-label">Engagement model</span>
+                                Fixed monthly fee for a predefined number of consulting hours. Consistent senior access without a full-time hire.
+                            </div>
+
+                            <a href="partner.html" class="btn btn-secondary">Get started</a>
+                        </div>
+                    </div>
+
+                    <!-- Track 3: Venture Building (featured) -->
+                    <div class="track-card featured">
+                        <div class="track-header">
+                            <span class="track-num">Track 03</span>
+                            <span class="track-badge">Partnership</span>
+                        </div>
+                        <h2 class="track-title">Venture Building Partnership</h2>
+                        <p class="track-audience">For startups and founders looking for a long-term strategic technology partner, not just a vendor. VTEC acts as an active co-builder, not a hired contractor.</p>
+
+                        <p class="track-includes-label">What we bring</p>
+                        <ul class="track-includes">
+                            <li>Business and product strategy</li>
+                            <li>Market validation</li>
+                            <li>Product discovery</li>
+                            <li>UX and UI design</li>
+                            <li>MVP development</li>
+                            <li>SaaS platform development</li>
+                            <li>Technical leadership</li>
+                            <li>Product management</li>
+                            <li>Growth planning</li>
+                        </ul>
+
+                        <div class="track-footer">
+                            <div class="track-model">
+                                <span class="track-model-label">Engagement model</span>
+                                No upfront development fees. VTEC provides services on a deferred-compensation basis and receives <strong>20% of the technology budget</strong> allocated from successful funding rounds, subject to mutually agreed contractual terms. Your cash stays with you until you raise.
+                            </div>
+
+                            <a href="partner.html" class="btn btn-primary">Apply for partnership</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Quick comparison note -->
+                <div class="comparison-note" role="complementary" aria-label="Track comparison summary">
+                    <div class="comparison-item">
+                        <span class="comparison-label">Track 01</span>
+                        <h4>Hourly Consulting</h4>
+                        <p>A specific problem. A short window. No ongoing obligation.</p>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Track 02</span>
+                        <h4>Strategic Retainer</h4>
+                        <p>Continuous access. Predictable cost. Senior expertise on tap.</p>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Track 03</span>
+                        <h4>Venture Building</h4>
+                        <p>Full commitment. Shared upside. We succeed when you do.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SaaS product dev note -->
+        <section class="section" id="saas-note">
+            <div class="container grid-layout">
+                <div class="section-header">
+                    <span class="section-label">Also available</span>
+                    <h2 class="section-title">SaaS product development</h2>
+                </div>
+                <div class="section-body">
+                    <p class="text-large">Beyond consulting and venture building, VTEC takes on product development engagements directly. We design, build, and launch custom SaaS solutions for organizations that need a full delivery team without building one in-house.</p>
+                    <p>This covers web applications, mobile apps for iOS and Android, enterprise platforms, customer portals, workflow automation, data management systems, and AI-powered applications, across industries including edtech, fintech, logistics, healthcare, government services, and HR.</p>
+                    <div style="margin-top: var(--space-md);">
+                        <a href="partner.html" class="btn btn-primary">Discuss your product</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section cta-section" id="contact">
+            <div class="container">
+                <div class="cta-card">
+                    <div class="cta-content">
+                        <h2 class="cta-title">Not sure which track fits?</h2>
+                        <p class="cta-text">Tell us what you're working on and where you are in the process. We'll recommend the right engagement model and outline what working together would look like.</p>
+                        <div class="contact-methods">
+                            <a href="mailto:info@vtec-jo.com" class="btn btn-primary">Email</a>
+                            <a href="https://www.linkedin.com/company/venture-tech-consultancy/?viewAsMember=true" target="_blank" rel="noopener noreferrer" class="btn btn-primary">LinkedIn</a>
+                        </div>
+                    </div>
+                    <div class="cta-form-wrapper">
+                        <form id="contact-form">
+                            <p class="form-title">Send a Message</p>
+                            <div class="hp-field" aria-hidden="true">
+                                <label for="website-hww">Website</label>
+                                <input type="text" id="website-hww" name="website" tabindex="-1" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required aria-required="true" autocomplete="name" maxlength="120" placeholder="e.g., Dana Abu-Hamad">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" inputmode="email" maxlength="254" placeholder="e.g., dana@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="track-interest">Engagement track</label>
+                                <select id="track-interest" name="trackInterest">
+                                    <option value="" disabled selected>Which track interests you?</option>
+                                    <option value="Hourly Consulting">Track 01: Hourly Consulting</option>
+                                    <option value="Strategic Retainer">Track 02: Strategic Retainer</option>
+                                    <option value="Venture Building Partnership">Track 03: Venture Building Partnership</option>
+                                    <option value="SaaS Product Development">SaaS Product Development</option>
+                                    <option value="Not sure yet">Not sure yet</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="4" required aria-required="true" maxlength="2000" placeholder="Tell us about your situation and what you're trying to achieve."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+                            <p class="form-status" id="form-status" aria-live="polite"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <a href="index.html#hero" class="footer-logo">VTEC</a>
+                <p class="footer-tagline">Technology and innovation consultancy for organizations, government entities, and startups.</p>
+                <div class="footer-icons">
+                    <a href="mailto:info@vtec-jo.com" class="footer-icon-btn" aria-label="Email us at info@vtec-jo.com" title="Email us">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/company/venture-tech-consultancy/?viewAsMember=true" class="footer-icon-btn" target="_blank" rel="noopener noreferrer" aria-label="Visit our LinkedIn profile" title="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    </a>
+                </div>
+                <p class="footer-copy">&copy; VTEC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
