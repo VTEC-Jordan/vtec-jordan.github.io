@@ -1484,7 +1484,16 @@ select:focus-visible {
     }
 
     .hero-title {
-        font-size: clamp(2.6rem, 13vw, 3.8rem);
+        font-size: clamp(2rem, 10vw, 2.9rem);
+    }
+
+    .home-page .hero-title {
+        font-size: clamp(2.6rem, 13vw, 3.6rem);
+    }
+
+    .hero-kicker {
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
     }
 
     .hero-description {
