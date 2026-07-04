@@ -667,16 +667,12 @@ document.addEventListener('DOMContentLoaded', () => {
             waveAmpX: 28,
             waveAmpY: 14,
             xGap: 24,
-            yGap: 42,
-            friction: 0.925,
-            tension: 0.005,
-            maxCursorMove: 90
+            yGap: 42
         };
 
         const noise = new Noise(Math.random());
         let lines = [];
         let w = 0, h = 0;
-        const mouse = { x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false };
 
         let accent = '#006D77';
         function readAccent() {
@@ -709,8 +705,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     pts.push({
                         x: xStart + cfg.xGap * i,
                         y: yStart + cfg.yGap * j,
-                        wave: { x: 0, y: 0 },
-                        cursor: { x: 0, y: 0, vx: 0, vy: 0 }
+                        wave: { x: 0, y: 0 }
                     });
                 }
                 lines.push(pts);
@@ -723,30 +718,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     const move = noise.perlin2((p.x + time * cfg.waveSpeedX) * 0.002, (p.y + time * cfg.waveSpeedY) * 0.0015) * 12;
                     p.wave.x = Math.cos(move) * cfg.waveAmpX;
                     p.wave.y = Math.sin(move) * cfg.waveAmpY;
-
-                    const dx = p.x - mouse.sx, dy = p.y - mouse.sy;
-                    const dist = Math.hypot(dx, dy), l = Math.max(175, mouse.vs);
-                    if (dist < l) {
-                        const s = 1 - dist / l;
-                        const f = Math.cos(dist * 0.001) * s;
-                        p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00065;
-                        p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00065;
-                    }
-                    p.cursor.vx += (0 - p.cursor.x) * cfg.tension;
-                    p.cursor.vy += (0 - p.cursor.y) * cfg.tension;
-                    p.cursor.vx *= cfg.friction;
-                    p.cursor.vy *= cfg.friction;
-                    p.cursor.x += p.cursor.vx * 2;
-                    p.cursor.y += p.cursor.vy * 2;
-                    p.cursor.x = Math.min(cfg.maxCursorMove, Math.max(-cfg.maxCursorMove, p.cursor.x));
-                    p.cursor.y = Math.min(cfg.maxCursorMove, Math.max(-cfg.maxCursorMove, p.cursor.y));
                 });
             });
         }
 
-        function moved(point, withCursor) {
-            const x = point.x + point.wave.x + (withCursor ? point.cursor.x : 0);
-            const y = point.y + point.wave.y + (withCursor ? point.cursor.y : 0);
+        function moved(point) {
+            const x = point.x + point.wave.x;
+            const y = point.y + point.wave.y;
             return { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
         }
 
@@ -757,12 +735,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.globalAlpha = 0.6;
             ctx.lineWidth = 1;
             lines.forEach((points) => {
-                let p1 = moved(points[0], false);
+                let p1 = moved(points[0]);
                 ctx.moveTo(p1.x, p1.y);
                 points.forEach((p, idx) => {
                     const isLast = idx === points.length - 1;
-                    p1 = moved(p, !isLast);
-                    const p2 = moved(points[idx + 1] || points[points.length - 1], !isLast);
+                    p1 = moved(p);
+                    const p2 = moved(points[idx + 1] || points[points.length - 1]);
                     ctx.lineTo(p1.x, p1.y);
                     if (isLast) ctx.moveTo(p2.x, p2.y);
                 });
@@ -782,29 +760,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        window.addEventListener('pointermove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            if (!mouse.set) {
-                mouse.sx = mouse.x; mouse.sy = mouse.y;
-                mouse.lx = mouse.x; mouse.ly = mouse.y;
-                mouse.set = true;
-            }
-        }, { passive: true });
-
         let raf;
         function tick(t) {
-            mouse.sx += (mouse.x - mouse.sx) * 0.1;
-            mouse.sy += (mouse.y - mouse.sy) * 0.1;
-            const dx = mouse.x - mouse.lx, dy = mouse.y - mouse.ly;
-            const d = Math.hypot(dx, dy);
-            mouse.v = d;
-            mouse.vs += (d - mouse.vs) * 0.1;
-            mouse.vs = Math.min(100, mouse.vs);
-            mouse.lx = mouse.x;
-            mouse.ly = mouse.y;
-            mouse.a = Math.atan2(dy, dx);
-
             movePoints(t);
             drawLines();
             raf = requestAnimationFrame(tick);
