@@ -2174,3 +2174,75 @@ html {
     opacity: 1;
     transform: scale(1.12);
 }
+
+/* ========================================
+   SECTION: MOBILE CENTERING
+   On small screens all content centers; forms keep
+   left-aligned labels for usability.
+   ======================================== */
+@media (max-width: 768px) {
+    .section-header,
+    .section-body,
+    .section-subtitle,
+    .tracks-intro,
+    .service-item,
+    .grid-card,
+    .workshop-card,
+    .track-card,
+    .comparison-item,
+    .cta-content,
+    .policy-section {
+        text-align: center;
+    }
+
+    .section-title {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Left-anchored list glyphs look lopsided on centered text */
+    .feature-list li {
+        padding-left: 0;
+    }
+
+    .feature-list li::before {
+        display: none;
+    }
+
+    .track-card .track-includes li {
+        padding-left: 0;
+    }
+
+    .track-card .track-includes li::before {
+        display: none;
+    }
+
+    .track-card .track-header {
+        justify-content: center;
+    }
+
+    .contact-methods {
+        justify-content: center;
+    }
+
+    .contact-methods .btn {
+        max-width: none;
+    }
+
+    /* Center the Why VTEC accent tick with its text */
+    .grid-card::before {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .policy-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+}
