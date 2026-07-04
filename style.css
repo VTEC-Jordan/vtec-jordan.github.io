@@ -948,6 +948,7 @@ select:focus-visible {
     background-color: var(--bg-alt);
     color: var(--text);
     padding: var(--space-lg);
+    column-gap: var(--space-lg);
     border-radius: calc(var(--radius) + 4px);
     box-shadow: var(--shadow-soft);
     border: 1px solid color-mix(in srgb, var(--accent) 14%, var(--border));
@@ -998,7 +999,7 @@ select:focus-visible {
 
 .cta-form-wrapper {
     color: var(--text);
-    padding: var(--space-md) 0 var(--space-md) var(--space-lg);
+    padding: var(--space-md) 0 var(--space-md) var(--space-md);
     border-left: 1px solid var(--border);
 }
 
