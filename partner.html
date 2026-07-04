@@ -37,8 +37,8 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
-    <link rel="preload" href="style.css?v=20260423" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="style.css?v=20260706" as="style">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -46,30 +46,15 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#FDFCFB" media="(prefers-color-scheme: light)">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=20260423">
-
-    <!-- GSAP — skipped on reduced-motion or slow connections -->
-    <script>
-      (function(){
-        var pref=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-        var nav=navigator.connection||navigator.mozConnection;
-        var slow=nav&&(nav.saveData||['slow-2g','2g','3g'].includes(nav.effectiveType));
-        if(!pref&&!slow){
-          ['https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js',
-           'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js'
-          ].forEach(function(src){var s=document.createElement('script');s.src=src;document.head.appendChild(s);});
-        }
-      })();
-    </script>
+    <link rel="stylesheet" href="style.css?v=20260706">
 
     <!-- JS -->
-    <script defer src="script.js?v=20260423"></script>
-    <script defer src="silk-init.js"></script>
+    <script defer src="script.js?v=20260706"></script>
 </head>
 <body>
 
@@ -111,6 +96,7 @@
         <canvas class="shader-bg" id="shader-bg" aria-hidden="true"></canvas>
         <!-- Section: Hero - Partnership value proposition -->
         <section class="hero hero-background-paths" id="partner-hero">
+            <canvas class="hero-object" id="hero-object" data-shape="octahedron" aria-hidden="true"></canvas>
             <div class="container">
                 <div class="hero-content">
                     <span class="section-label">Work with VTEC</span>

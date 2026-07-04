@@ -19,3 +19,11 @@ AUDIT.md
 *.secret
 .env
 .env.*
+
+# Local tooling (npm + shadcn/ReactBits registry config for Claude Code MCP)
+node_modules/
+package.json
+package-lock.json
+components.json
+.mcp.json
+*.log

@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    function prefersReducedMotion() {
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
     // -------------------------------------------------------
     // Services Slider
     // Shows 4 cards at a time, slides through all 7 services
@@ -33,9 +37,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dot = document.createElement('button');
                 dot.className = 'slider-dot' + (i === current ? ' active' : '');
                 dot.setAttribute('aria-label', `Go to page ${i + 1}`);
-                dot.addEventListener('click', () => goTo(i));
+                dot.addEventListener('click', () => goToAnimated(i));
                 dotsContainer.appendChild(dot);
             }
+        }
+
+        // Crossfade the grid during user-triggered page swaps
+        function goToAnimated(page) {
+            if (page === current || prefersReducedMotion()) { goTo(page); return; }
+            slider.classList.add('slider-fading');
+            setTimeout(() => {
+                goTo(page);
+                slider.classList.remove('slider-fading');
+            }, 200);
         }
 
         function goTo(page) {
@@ -59,8 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        prevBtn.addEventListener('click', () => goTo(current - 1));
-        nextBtn.addEventListener('click', () => goTo(current + 1));
+        prevBtn.addEventListener('click', () => goToAnimated(current - 1));
+        nextBtn.addEventListener('click', () => goToAnimated(current + 1));
 
         // Rebuild on resize
         let resizeTimer;
@@ -118,9 +132,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dot = document.createElement('button');
                 dot.className = 'slider-dot' + (i === wCurrent ? ' active' : '');
                 dot.setAttribute('aria-label', `Go to page ${i + 1}`);
-                dot.addEventListener('click', () => wGoTo(i));
+                dot.addEventListener('click', () => wGoToAnimated(i));
                 wDotsContainer.appendChild(dot);
             }
+        }
+
+        function wGoToAnimated(page) {
+            if (page === wCurrent || prefersReducedMotion()) { wGoTo(page); return; }
+            wSlider.classList.add('slider-fading');
+            setTimeout(() => {
+                wGoTo(page);
+                wSlider.classList.remove('slider-fading');
+            }, 200);
         }
 
         function wGoTo(page) {
@@ -137,8 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        wPrevBtn.addEventListener('click', () => wGoTo(wCurrent - 1));
-        wNextBtn.addEventListener('click', () => wGoTo(wCurrent + 1));
+        wPrevBtn.addEventListener('click', () => wGoToAnimated(wCurrent - 1));
+        wNextBtn.addEventListener('click', () => wGoToAnimated(wCurrent + 1));
 
         function wEqualiseHeights() {
             wItems.forEach(item => { item.style.height = ''; item.style.display = ''; });
@@ -276,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------
     let lastScrollTop = 0;
     const header = document.getElementById('header');
-    window.addEventListener('scroll', () => {
+    function updateHeaderState() {
         const scrollTop = window.scrollY;
         if (header) {
             if (scrollTop > lastScrollTop) {
@@ -284,9 +307,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 header.classList.remove('hide');
             }
+            header.classList.toggle('scrolled', scrollTop > 12);
         }
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-    }, { passive: true });
+    }
+    window.addEventListener('scroll', updateHeaderState, { passive: true });
+    updateHeaderState();
 
     // -------------------------------------------------------
     // Theme Toggle (Dark/Light Mode)
@@ -583,113 +609,212 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------
-    // Animated Shader Background
-    // Vanilla JS/WebGL2 adaptation of 21st.dev/r/ravikatiyar162/animated-shader-hero
-    // Shader by Matthias Hurrle (@atzedent) — tinted to VTEC accent palette.
+    // Waves Background
+    // Vanilla adaptation of the ReactBits "Waves" component:
+    // a perlin-noise line field that bends around the cursor.
+    // Replaces the previous WebGL cloud shader.
     // -------------------------------------------------------
-    (function initShaderBg() {
+    (function initWavesBg() {
         const canvas = document.getElementById('shader-bg');
         if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
 
-        const gl = canvas.getContext('webgl2');
-        if (!gl) { canvas.style.display = 'none'; return; }
-
-        const vertSrc = `#version 300 es
-precision highp float;
-in vec4 position;
-void main(){ gl_Position = position; }`;
-
-        const fragSrc = `#version 300 es
-precision highp float;
-out vec4 O;
-uniform vec2 resolution;
-uniform float time;
-#define FC gl_FragCoord.xy
-#define T time
-#define R resolution
-#define MN min(R.x,R.y)
-float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract(p.x*p.y);}
-float noise(in vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);float a=rnd(i),b=rnd(i+vec2(1,0)),c=rnd(i+vec2(0,1)),d=rnd(i+1.);return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);}
-float fbm(vec2 p){float t=.0,a=1.;mat2 m=mat2(1.,-.5,.2,1.2);for(int i=0;i<5;i++){t+=a*noise(p);p*=2.*m;a*=.5;}return t;}
-float clouds(vec2 p){float d=1.,t=.0;for(float i=.0;i<3.;i++){float a=d*fbm(i*10.+p*.2+.2*(1.+i)*p.y+d+i*i+p);t=mix(t,d,a);d=a;p*=2./(i+1.);}return t;}
-void main(void){
-  vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
-  vec3 col=vec3(0);
-  float bg=clouds(vec2(st.x+T*.5,-st.y));
-  uv*=1.-.3*(sin(T*.2)*.5+.5);
-  for(float i=1.;i<12.;i++){
-    uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.5+.1*uv.x);
-    vec2 p=uv;
-    float d=length(p);
-    // VTEC teal: accent #006D77 = vec3(0.0, 0.427, 0.467)
-    col+=.00125/d*(cos(sin(i)*vec3(0.0,0.427,0.467))+1.);
-    float b=noise(i+p+bg*1.731);
-    col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));
-    col=mix(col,vec3(bg*.0,bg*.137,bg*.12),d);
-  }
-  O=vec4(col,1);
-}`;
-
-        function compile(shader, src) {
-            gl.shaderSource(shader, src);
-            gl.compileShader(shader);
+        // Perlin noise, ported from the ReactBits Waves component
+        class Grad {
+            constructor(x, y) { this.x = x; this.y = y; }
+            dot2(x, y) { return this.x * x + this.y * y; }
+        }
+        class Noise {
+            constructor(seed) {
+                this.grad3 = [
+                    new Grad(1, 1), new Grad(-1, 1), new Grad(1, -1), new Grad(-1, -1),
+                    new Grad(1, 0), new Grad(-1, 0), new Grad(1, 0), new Grad(-1, 0),
+                    new Grad(0, 1), new Grad(0, -1), new Grad(0, 1), new Grad(0, -1)
+                ];
+                this.p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+                this.perm = new Array(512);
+                this.gradP = new Array(512);
+                this.seed(seed);
+            }
+            seed(seed) {
+                if (seed > 0 && seed < 1) seed *= 65536;
+                seed = Math.floor(seed);
+                if (seed < 256) seed |= seed << 8;
+                for (let i = 0; i < 256; i++) {
+                    const v = i & 1 ? this.p[i] ^ (seed & 255) : this.p[i] ^ ((seed >> 8) & 255);
+                    this.perm[i] = this.perm[i + 256] = v;
+                    this.gradP[i] = this.gradP[i + 256] = this.grad3[v % 12];
+                }
+            }
+            fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+            lerp(a, b, t) { return (1 - t) * a + t * b; }
+            perlin2(x, y) {
+                let X = Math.floor(x), Y = Math.floor(y);
+                x -= X; y -= Y; X &= 255; Y &= 255;
+                const n00 = this.gradP[X + this.perm[Y]].dot2(x, y);
+                const n01 = this.gradP[X + this.perm[Y + 1]].dot2(x, y - 1);
+                const n10 = this.gradP[X + 1 + this.perm[Y]].dot2(x - 1, y);
+                const n11 = this.gradP[X + 1 + this.perm[Y + 1]].dot2(x - 1, y - 1);
+                const u = this.fade(x);
+                return this.lerp(this.lerp(n00, n10, u), this.lerp(n01, n11, u), this.fade(y));
+            }
         }
 
-        const vs = gl.createShader(gl.VERTEX_SHADER);
-        const fs = gl.createShader(gl.FRAGMENT_SHADER);
-        compile(vs, vertSrc);
-        compile(fs, fragSrc);
+        const cfg = {
+            waveSpeedX: 0.0125,
+            waveSpeedY: 0.005,
+            waveAmpX: 28,
+            waveAmpY: 14,
+            xGap: 24,
+            yGap: 42,
+            friction: 0.925,
+            tension: 0.005,
+            maxCursorMove: 90
+        };
 
-        const prog = gl.createProgram();
-        gl.attachShader(prog, vs);
-        gl.attachShader(prog, fs);
-        gl.linkProgram(prog);
+        const noise = new Noise(Math.random());
+        let lines = [];
+        let w = 0, h = 0;
+        const mouse = { x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false };
 
-        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-            console.warn('Shader link failed:', gl.getProgramInfoLog(prog));
-            canvas.style.display = 'none';
+        let accent = '#006D77';
+        function readAccent() {
+            const v = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+            if (v) accent = v;
+        }
+        readAccent();
+        new MutationObserver(readAccent).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+        function setSize() {
+            // Background lines are soft — 1.25x DPR cap keeps the fill cost low
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+            w = window.innerWidth;
+            h = window.innerHeight;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function setLines() {
+            lines = [];
+            const oWidth = w + 200, oHeight = h + 30;
+            const totalLines = Math.ceil(oWidth / cfg.xGap);
+            const totalPoints = Math.ceil(oHeight / cfg.yGap);
+            const xStart = (w - cfg.xGap * totalLines) / 2;
+            const yStart = (h - cfg.yGap * totalPoints) / 2;
+            for (let i = 0; i <= totalLines; i++) {
+                const pts = [];
+                for (let j = 0; j <= totalPoints; j++) {
+                    pts.push({
+                        x: xStart + cfg.xGap * i,
+                        y: yStart + cfg.yGap * j,
+                        wave: { x: 0, y: 0 },
+                        cursor: { x: 0, y: 0, vx: 0, vy: 0 }
+                    });
+                }
+                lines.push(pts);
+            }
+        }
+
+        function movePoints(time) {
+            lines.forEach((pts) => {
+                pts.forEach((p) => {
+                    const move = noise.perlin2((p.x + time * cfg.waveSpeedX) * 0.002, (p.y + time * cfg.waveSpeedY) * 0.0015) * 12;
+                    p.wave.x = Math.cos(move) * cfg.waveAmpX;
+                    p.wave.y = Math.sin(move) * cfg.waveAmpY;
+
+                    const dx = p.x - mouse.sx, dy = p.y - mouse.sy;
+                    const dist = Math.hypot(dx, dy), l = Math.max(175, mouse.vs);
+                    if (dist < l) {
+                        const s = 1 - dist / l;
+                        const f = Math.cos(dist * 0.001) * s;
+                        p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00065;
+                        p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00065;
+                    }
+                    p.cursor.vx += (0 - p.cursor.x) * cfg.tension;
+                    p.cursor.vy += (0 - p.cursor.y) * cfg.tension;
+                    p.cursor.vx *= cfg.friction;
+                    p.cursor.vy *= cfg.friction;
+                    p.cursor.x += p.cursor.vx * 2;
+                    p.cursor.y += p.cursor.vy * 2;
+                    p.cursor.x = Math.min(cfg.maxCursorMove, Math.max(-cfg.maxCursorMove, p.cursor.x));
+                    p.cursor.y = Math.min(cfg.maxCursorMove, Math.max(-cfg.maxCursorMove, p.cursor.y));
+                });
+            });
+        }
+
+        function moved(point, withCursor) {
+            const x = point.x + point.wave.x + (withCursor ? point.cursor.x : 0);
+            const y = point.y + point.wave.y + (withCursor ? point.cursor.y : 0);
+            return { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
+        }
+
+        function drawLines() {
+            ctx.clearRect(0, 0, w, h);
+            ctx.beginPath();
+            ctx.strokeStyle = accent;
+            ctx.globalAlpha = 0.6;
+            ctx.lineWidth = 1;
+            lines.forEach((points) => {
+                let p1 = moved(points[0], false);
+                ctx.moveTo(p1.x, p1.y);
+                points.forEach((p, idx) => {
+                    const isLast = idx === points.length - 1;
+                    p1 = moved(p, !isLast);
+                    const p2 = moved(points[idx + 1] || points[points.length - 1], !isLast);
+                    ctx.lineTo(p1.x, p1.y);
+                    if (isLast) ctx.moveTo(p2.x, p2.y);
+                });
+            });
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        setSize();
+        setLines();
+        window.addEventListener('resize', () => { setSize(); setLines(); }, { passive: true });
+
+        if (prefersReducedMotion()) {
+            // Static line field: draw one calm frame, no animation loop
+            movePoints(0);
+            drawLines();
             return;
         }
 
-        const buf = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
-
-        const pos = gl.getAttribLocation(prog, 'position');
-        gl.enableVertexAttribArray(pos);
-        gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
-
-        const uRes  = gl.getUniformLocation(prog, 'resolution');
-        const uTime = gl.getUniformLocation(prog, 'time');
-
-        function resize() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-            canvas.width  = window.innerWidth  * dpr;
-            canvas.height = window.innerHeight * dpr;
-            gl.viewport(0, 0, canvas.width, canvas.height);
-        }
-
-        resize();
-        window.addEventListener('resize', resize, { passive: true });
-
-        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReduced) { canvas.style.display = 'none'; return; }
+        window.addEventListener('pointermove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            if (!mouse.set) {
+                mouse.sx = mouse.x; mouse.sy = mouse.y;
+                mouse.lx = mouse.x; mouse.ly = mouse.y;
+                mouse.set = true;
+            }
+        }, { passive: true });
 
         let raf;
-        function loop(now) {
-            gl.useProgram(prog);
-            gl.uniform2f(uRes, canvas.width, canvas.height);
-            gl.uniform1f(uTime, now * 1e-3);
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            raf = requestAnimationFrame(loop);
-        }
+        function tick(t) {
+            mouse.sx += (mouse.x - mouse.sx) * 0.1;
+            mouse.sy += (mouse.y - mouse.sy) * 0.1;
+            const dx = mouse.x - mouse.lx, dy = mouse.y - mouse.ly;
+            const d = Math.hypot(dx, dy);
+            mouse.v = d;
+            mouse.vs += (d - mouse.vs) * 0.1;
+            mouse.vs = Math.min(100, mouse.vs);
+            mouse.lx = mouse.x;
+            mouse.ly = mouse.y;
+            mouse.a = Math.atan2(dy, dx);
 
-        raf = requestAnimationFrame(loop);
+            movePoints(t);
+            drawLines();
+            raf = requestAnimationFrame(tick);
+        }
+        raf = requestAnimationFrame(tick);
 
         // Pause when page is hidden to save battery
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) { cancelAnimationFrame(raf); }
-            else { raf = requestAnimationFrame(loop); }
+            else { raf = requestAnimationFrame(tick); }
         });
     })();
 
@@ -699,7 +824,7 @@ void main(void){
     // -------------------------------------------------------
     const heroContent = document.querySelector('.hero-content');
     if (heroContent) {
-        const revealItems = Array.from(heroContent.querySelectorAll('.hero-title, .hero-description, .hero-btns, .section-label'));
+        const revealItems = Array.from(heroContent.querySelectorAll('.hero-title, .hero-description, .hero-btns, .section-label, .hero-hint'));
         const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (prefersReduced) {
@@ -720,59 +845,266 @@ void main(void){
 
 
     // -------------------------------------------------------
-    // StarBorder: animated radial-gradient streak on card borders
-    // Applies to all card/bordered elements
+    // Interactive Hero Object
+    // A wireframe solid rendered on a plain 2D canvas — slow
+    // ambient rotation, tilts toward the cursor, spins on click
+    // or arrow keys. Each page picks its shape via data-shape:
+    // icosahedron (default), octahedron, cube, or torus.
     // -------------------------------------------------------
-    function applyStarBorder(el) {
-        el.classList.add('star-border-container');
+    (function initHeroObject() {
+        const canvas = document.getElementById('hero-object');
+        if (!canvas || prefersReducedMotion()) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
 
-        // Wrap existing children in .star-inner so they sit above the gradients
-        const inner = document.createElement('div');
-        inner.className = 'star-inner';
-        while (el.firstChild) inner.appendChild(el.firstChild);
+        function normalizeVerts(verts, targetRadius) {
+            const maxR = Math.max(...verts.map((v) => Math.hypot(v[0], v[1], v[2])));
+            const k = targetRadius / maxR;
+            return verts.map((v) => [v[0] * k, v[1] * k, v[2] * k]);
+        }
 
-        const color = 'var(--accent)';
-        const speed = '6s';
+        function edgesByDistance(verts, distSq) {
+            const edges = [];
+            for (let i = 0; i < verts.length; i++) {
+                for (let j = i + 1; j < verts.length; j++) {
+                    const dx = verts[i][0] - verts[j][0];
+                    const dy = verts[i][1] - verts[j][1];
+                    const dz = verts[i][2] - verts[j][2];
+                    if (Math.abs(dx * dx + dy * dy + dz * dz - distSq) < 0.01) edges.push([i, j]);
+                }
+            }
+            return edges;
+        }
 
-        const gradBottom = document.createElement('div');
-        gradBottom.className = 'border-gradient-bottom';
-        gradBottom.style.background = `radial-gradient(circle, ${color}, transparent 10%)`;
-        gradBottom.style.animationDuration = speed;
+        const SHAPES = {
+            icosahedron() {
+                const PHI = (1 + Math.sqrt(5)) / 2;
+                const verts = [];
+                [-1, 1].forEach((s1) => [-PHI, PHI].forEach((s2) => {
+                    verts.push([0, s1, s2], [s1, s2, 0], [s2, 0, s1]);
+                }));
+                return { verts: normalizeVerts(verts, 1.9), edges: edgesByDistance(verts, 4) };
+            },
+            octahedron() {
+                const verts = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]];
+                return { verts: normalizeVerts(verts, 1.9), edges: edgesByDistance(verts, 2) };
+            },
+            cube() {
+                const verts = [];
+                [-1, 1].forEach((x) => [-1, 1].forEach((y) => [-1, 1].forEach((z) => verts.push([x, y, z]))));
+                return { verts: normalizeVerts(verts, 1.75), edges: edgesByDistance(verts, 4) };
+            },
+            torus() {
+                const R = 1.3, r = 0.55, MAJ = 14, MIN = 7;
+                const verts = [], edges = [];
+                for (let i = 0; i < MAJ; i++) {
+                    const a = (i / MAJ) * Math.PI * 2;
+                    for (let j = 0; j < MIN; j++) {
+                        const b = (j / MIN) * Math.PI * 2;
+                        verts.push([
+                            (R + r * Math.cos(b)) * Math.cos(a),
+                            r * Math.sin(b),
+                            (R + r * Math.cos(b)) * Math.sin(a)
+                        ]);
+                        const idx = i * MIN + j;
+                        edges.push([idx, i * MIN + ((j + 1) % MIN)]);
+                        edges.push([idx, ((i + 1) % MAJ) * MIN + j]);
+                    }
+                }
+                return { verts: normalizeVerts(verts, 1.9), edges };
+            }
+        };
 
-        const gradTop = document.createElement('div');
-        gradTop.className = 'border-gradient-top';
-        gradTop.style.background = `radial-gradient(circle, ${color}, transparent 10%)`;
-        gradTop.style.animationDuration = speed;
+        const make = SHAPES[canvas.dataset.shape] || SHAPES.icosahedron;
+        const { verts, edges } = make();
+        const dotRadius = verts.length > 20 ? 1.7 : 2.4;
 
-        el.appendChild(gradBottom);
-        el.appendChild(gradTop);
-        el.appendChild(inner);
-    }
+        let accent = '#006D77';
+        function readAccent() {
+            const v = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+            if (v) accent = v;
+        }
+        readAccent();
+        new MutationObserver(readAccent).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-    ['.logo-item-placeholder'].forEach(selector => {
-        document.querySelectorAll(selector).forEach(applyStarBorder);
-    });
+        let w = 0, h = 0, dpr = 1;
+        function resize() {
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const rect = canvas.getBoundingClientRect();
+            w = rect.width;
+            h = rect.height;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resize();
+        window.addEventListener('resize', resize, { passive: true });
 
-    // Non-destructive variant: only prepends the gradient overlays without
-    // restructuring DOM (safe for forms and complex layouts)
-    function applyStarBorderSafe(el) {
-        el.classList.add('star-border-container');
-        const color = 'var(--accent)';
-        const speed = '6s';
+        // Cursor tilt target (normalized -0.5..0.5 across the viewport)
+        let targetTX = 0, targetTY = 0, tiltX = 0, tiltY = 0;
+        window.addEventListener('pointermove', (e) => {
+            targetTY = (e.clientX / window.innerWidth - 0.5) * 1.1;
+            targetTX = (e.clientY / window.innerHeight - 0.5) * 0.8;
+        }, { passive: true });
 
-        const gradBottom = document.createElement('div');
-        gradBottom.className = 'border-gradient-bottom';
-        gradBottom.style.cssText = `background:radial-gradient(circle,${color},transparent 10%);animation-duration:${speed};pointer-events:none;`;
+        // Spin impulses: click the hero or press arrow keys to fling the object
+        let spinVX = 0, spinVY = 0, spinAX = 0, spinAY = 0;
+        const hero = canvas.closest('.hero');
+        if (hero) {
+            hero.addEventListener('click', (e) => {
+                if (e.target.closest('a, button, input, textarea, select')) return;
+                spinVY += 0.28;
+                spinVX += 0.12;
+            });
+        }
 
-        const gradTop = document.createElement('div');
-        gradTop.className = 'border-gradient-top';
-        gradTop.style.cssText = `background:radial-gradient(circle,${color},transparent 10%);animation-duration:${speed};pointer-events:none;`;
+        // Run state: draw only while the hero is on screen and the tab visible
+        let heroInView = true;
+        let running = false;
+        let raf = null;
 
-        el.insertBefore(gradBottom, el.firstChild);
-        el.insertBefore(gradTop, el.firstChild);
-    }
+        window.addEventListener('keydown', (e) => {
+            if (!running) return;
+            if (e.key === 'ArrowLeft') spinVY -= 0.14;
+            else if (e.key === 'ArrowRight') spinVY += 0.14;
+            else if (e.key === 'ArrowUp') spinVX -= 0.12;
+            else if (e.key === 'ArrowDown') spinVX += 0.12;
+        });
 
-    ['.partner-form-wrapper', '.cta-card'].forEach(selector => {
-        document.querySelectorAll(selector).forEach(applyStarBorderSafe);
-    });
+        function draw(now) {
+            if (!running) return;
+            const t = now * 0.0001;
+            tiltX += (targetTX - tiltX) * 0.045;
+            tiltY += (targetTY - tiltY) * 0.045;
+            spinAX += spinVX;
+            spinAY += spinVY;
+            spinVX *= 0.95;
+            spinVY *= 0.95;
+
+            const rx = t * 2.1 + tiltX + spinAX;
+            const ry = t * 3.4 + tiltY + spinAY;
+            const cx = Math.cos(rx), sx = Math.sin(rx);
+            const cy = Math.cos(ry), sy = Math.sin(ry);
+
+            const size = Math.min(w, h);
+            const scale = size * 0.27;
+            const persp = 4.2;
+
+            const pts = verts.map(([x, y, z]) => {
+                // Rotate around Y, then X
+                const x1 = x * cy + z * sy;
+                const z1 = -x * sy + z * cy;
+                const y2 = y * cx - z1 * sx;
+                const z2 = y * sx + z1 * cx;
+                const f = persp / (persp - z2 * 0.55);
+                return [w / 2 + x1 * scale * f, h / 2 + y2 * scale * f, z2];
+            });
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.lineWidth = 1.25;
+            ctx.strokeStyle = accent;
+            ctx.fillStyle = accent;
+            edges.forEach(([i, j]) => {
+                const depth = (pts[i][2] + pts[j][2]) / 2; // roughly -2..2
+                ctx.globalAlpha = 0.16 + (depth + 2) * 0.14;
+                ctx.beginPath();
+                ctx.moveTo(pts[i][0], pts[i][1]);
+                ctx.lineTo(pts[j][0], pts[j][1]);
+                ctx.stroke();
+            });
+            pts.forEach(([x, y, z]) => {
+                ctx.globalAlpha = 0.25 + (z + 2) * 0.16;
+                ctx.beginPath();
+                ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+
+            raf = requestAnimationFrame(draw);
+        }
+
+        function syncRun() {
+            const shouldRun = heroInView && !document.hidden;
+            if (shouldRun && !running) {
+                running = true;
+                raf = requestAnimationFrame(draw);
+            } else if (!shouldRun && running) {
+                running = false;
+                if (raf) cancelAnimationFrame(raf);
+            }
+        }
+
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver((entries) => {
+                entries.forEach((entry) => { heroInView = entry.isIntersecting; });
+                syncRun();
+            }).observe(canvas);
+        }
+        document.addEventListener('visibilitychange', syncRun);
+        syncRun();
+    })();
+
+    // -------------------------------------------------------
+    // Scroll Reveal System
+    // Sections and cards arrive with the same blur-up language
+    // as the hero. Hidden state is applied here (not in HTML),
+    // so content stays visible without JS. Skipped entirely
+    // under prefers-reduced-motion.
+    // -------------------------------------------------------
+    (function initScrollReveal() {
+        if (prefersReducedMotion() || !('IntersectionObserver' in window)) return;
+
+        const revealSelectors = [
+            '.section-header',
+            '.section-body',
+            '.section-subtitle',
+            '.tracks-intro',
+            '.service-item',
+            '.grid-card',
+            '.workshop-card',
+            '.track-card',
+            '.comparison-item',
+            '.process-step',
+            '.process-line',
+            '.logo-item-placeholder',
+            '.cta-card',
+            '.partner-form-wrapper',
+            '.policy-section',
+            '.logo-loop-wrapper'
+        ];
+        const combined = revealSelectors.join(', ');
+        const els = Array.from(document.querySelectorAll(combined));
+        if (!els.length) return;
+
+        // Stagger siblings: each revealable element is delayed by its
+        // position among revealable elements sharing the same parent.
+        els.forEach((el) => {
+            const parent = el.parentElement;
+            const revealSiblings = parent
+                ? Array.from(parent.children).filter((child) => child.matches(combined))
+                : [el];
+            const idx = Math.max(0, revealSiblings.indexOf(el));
+            el.style.setProperty('--reveal-delay', `${Math.min(idx, 7) * 90}ms`);
+            el.classList.add('reveal');
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                el.classList.add('is-revealed');
+                observer.unobserve(el);
+                // Once the entrance finishes, hand transitions back to the
+                // element's own styles (hover lifts, etc.) by removing the
+                // reveal classes — computed styles are identical, so no jump.
+                const delay = parseInt(el.style.getPropertyValue('--reveal-delay'), 10) || 0;
+                setTimeout(() => {
+                    el.classList.remove('reveal', 'is-revealed');
+                    el.style.removeProperty('--reveal-delay');
+                }, 950 + delay);
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+        els.forEach((el) => observer.observe(el));
+    })();
 });
