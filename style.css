@@ -1843,12 +1843,22 @@ html {
     transform: none;
 }
 
-/* Process strip: connector lines draw left-to-right in sequence,
-   because Align → Build → Scale actually is a sequence */
+/* Process strip: Align → Build → Scale is a real sequence, so it
+   animates as one: each step rises gently, then its connector line
+   draws toward the next step. Steps skip the default card reveal's
+   large offset and scale (sub-pixel scaling shimmers on small text). */
+.process-step.reveal {
+    transform: translateY(14px);
+}
+
 .process-line.reveal {
     opacity: 0;
     transform: scaleX(0);
     transform-origin: left center;
+    transition:
+        opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
 }
 
 .process-line.reveal.is-revealed {

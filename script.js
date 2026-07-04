@@ -1035,13 +1035,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Stagger siblings: each revealable element is delayed by its
         // position among revealable elements sharing the same parent.
+        // The process strip narrates a sequence (step → line → step),
+        // so it gets a wider, uncapped stagger than card grids.
         els.forEach((el) => {
             const parent = el.parentElement;
             const revealSiblings = parent
                 ? Array.from(parent.children).filter((child) => child.matches(combined))
                 : [el];
             const idx = Math.max(0, revealSiblings.indexOf(el));
-            el.style.setProperty('--reveal-delay', `${Math.min(idx, 7) * 90}ms`);
+            const inProcessStrip = parent && parent.classList.contains('process-strip');
+            const delay = inProcessStrip ? idx * 230 : Math.min(idx, 7) * 90;
+            el.style.setProperty('--reveal-delay', `${delay}ms`);
             el.classList.add('reveal');
         });
 
