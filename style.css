@@ -13,7 +13,7 @@
     --card-bg: #FFFFFF;
     --color-success: #16a34a;
     --color-error: #dc2626;
-    --header-bg: rgba(253, 252, 251, 0.9);
+    --header-bg: rgba(253, 252, 251, 0.68);
     
     /* Spacing: Consistent scale for layout and components */
     --space-xs: 0.5rem;
@@ -50,7 +50,7 @@
     --card-bg: #1A1A1A;
     --color-success: #22c55e;
     --color-error: #ef4444;
-    --header-bg: rgba(18, 18, 18, 0.9);
+    --header-bg: rgba(18, 18, 18, 0.68);
     --shadow-soft: 0 8px 26px rgba(0, 0, 0, 0.32);
     --shadow-lift: 0 18px 44px rgba(0, 0, 0, 0.44);
 }
@@ -236,7 +236,8 @@ select:focus-visible {
     width: 100%;
     height: var(--header-height);
     background-color: var(--header-bg);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
     border-bottom: 1px solid var(--border);
     z-index: 1000;
     display: flex;
