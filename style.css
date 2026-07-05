@@ -236,8 +236,8 @@ select:focus-visible {
     width: 100%;
     height: var(--header-height);
     background-color: var(--header-bg);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
     z-index: 1000;
     display: flex;
@@ -1840,10 +1840,10 @@ html {
    caused GPU jank when several large sections animated mid-scroll.) */
 .reveal {
     opacity: 0;
-    transform: translateY(26px) scale(0.99);
+    transform: translateY(18px);
     transition:
-        opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
-        transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+        opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -2005,7 +2005,8 @@ html {
     to { transform: translateX(-50%); }
 }
 
-.type-marquee:hover .type-marquee__track {
+.type-marquee:hover .type-marquee__track,
+.type-marquee--offscreen .type-marquee__track {
     animation-play-state: paused;
 }
 

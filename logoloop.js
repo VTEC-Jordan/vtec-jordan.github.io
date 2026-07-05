@@ -102,24 +102,34 @@
     track.addEventListener('mouseenter', function () { isHovered = true; });
     track.addEventListener('mouseleave', function () { isHovered = false; });
 
+    // Animate only while the strip is on screen and the tab is visible
+    var inView = true;
+
+    function stopLoop() {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; lastTs = null; }
+    }
+
+    function syncLoop() {
+      if (document.hidden || !inView) { stopLoop(); return; }
+      if (!rafId && seqWidth > 0) { lastTs = null; rafId = requestAnimationFrame(tick); }
+    }
+
     function start() {
       setup();
-      if (seqWidth > 0 && !document.hidden) {
-        lastTs = null;
-        rafId  = requestAnimationFrame(tick);
-      }
+      syncLoop();
     }
 
     // Two rAF frames to let the layout settle before measuring
     requestAnimationFrame(function () { requestAnimationFrame(start); });
 
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) {
-        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-      } else {
-        if (!rafId && seqWidth > 0) { lastTs = null; rafId = requestAnimationFrame(tick); }
-      }
-    });
+    document.addEventListener('visibilitychange', syncLoop);
+
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) {
+        inView = entries[0].isIntersecting;
+        syncLoop();
+      }).observe(container);
+    }
 
     if (window.ResizeObserver) {
       var ro = new ResizeObserver(function () {

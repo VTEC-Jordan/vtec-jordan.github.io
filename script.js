@@ -683,13 +683,13 @@ document.addEventListener('DOMContentLoaded', () => {
         new MutationObserver(readAccent).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
         function setSize() {
-            // Background lines are soft — 1.25x DPR cap keeps the fill cost low
-            const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+            // Background lines are soft — rendering at 1x keeps the
+            // full-viewport clear/stroke cost minimal on retina screens
             w = window.innerWidth;
             h = window.innerHeight;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            canvas.width = w;
+            canvas.height = h;
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
         }
 
         function setLines() {
@@ -760,11 +760,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // The field drifts slowly, so 30fps is visually identical to 60
+        // and halves the main-thread cost of the full-screen redraw.
         let raf;
+        let lastFrame = 0;
         function tick(t) {
+            raf = requestAnimationFrame(tick);
+            if (t - lastFrame < 31) return;
+            lastFrame = t;
             movePoints(t);
             drawLines();
-            raf = requestAnimationFrame(tick);
         }
         raf = requestAnimationFrame(tick);
 
@@ -800,6 +805,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+    // -------------------------------------------------------
+    // Type Marquee: pause the CSS animation while off-screen so it
+    // doesn't cost compositor work for something nobody can see.
+    // -------------------------------------------------------
+    if ('IntersectionObserver' in window) {
+        document.querySelectorAll('.type-marquee').forEach((band) => {
+            new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    band.classList.toggle('type-marquee--offscreen', !entry.isIntersecting);
+                });
+            }).observe(band);
+        });
+    }
 
     // -------------------------------------------------------
     // Interactive Hero Object
@@ -1064,7 +1083,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     el.classList.remove('reveal', 'is-revealed');
                     el.style.removeProperty('--reveal-delay');
-                }, 950 + delay);
+                }, 700 + delay);
             });
         }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
