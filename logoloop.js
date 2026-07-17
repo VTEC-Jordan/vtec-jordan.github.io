@@ -9,14 +9,14 @@
   // Technology stack logos as inline SVG HTML strings.
   // All use currentColor so they inherit the CSS accent colour.
   var LOGOS = [
-    { src: 'assets/videos-images/AWS.png',                                    alt: 'AWS',    title: 'AWS' },
-    { src: 'assets/videos-images/ChatGPT_Logo_1.png',                         alt: 'OpenAI', title: 'OpenAI / ChatGPT' },
-    { src: 'assets/videos-images/Claude_Logo_1.png',                          alt: 'Claude', title: 'Claude' },
-    { src: 'assets/videos-images/NVIDIA_Symbol_1.png',                        alt: 'NVIDIA', title: 'NVIDIA' },
-    { src: 'assets/videos-images/idAFFUENLe_logos.png',                       alt: 'Ollama', title: 'Ollama' },
-    { src: 'assets/videos-images/Microsoft_Azure_Portal_id4YvwdUb-_1.png',    alt: 'Azure',  title: 'Azure' },
-    { src: 'assets/videos-images/GitHub_Symbol_2.webp',                       alt: 'GitHub', title: 'GitHub' },
-    { src: 'assets/videos-images/Visual_Studio_Code_Logo_1.png',               alt: 'VS Code', title: 'VS Code' }
+    { src: '/assets/videos-images/AWS.png',                                    alt: 'AWS',    title: 'AWS' },
+    { src: '/assets/videos-images/ChatGPT_Logo_1.png',                         alt: 'OpenAI', title: 'OpenAI / ChatGPT' },
+    { src: '/assets/videos-images/Claude_Logo_1.png',                          alt: 'Claude', title: 'Claude' },
+    { src: '/assets/videos-images/NVIDIA_Symbol_1.png',                        alt: 'NVIDIA', title: 'NVIDIA' },
+    { src: '/assets/videos-images/idAFFUENLe_logos.png',                       alt: 'Ollama', title: 'Ollama' },
+    { src: '/assets/videos-images/Microsoft_Azure_Portal_id4YvwdUb-_1.png',    alt: 'Azure',  title: 'Azure' },
+    { src: '/assets/videos-images/GitHub_Symbol_2.webp',                       alt: 'GitHub', title: 'GitHub' },
+    { src: '/assets/videos-images/Visual_Studio_Code_Logo_1.png',               alt: 'VS Code', title: 'VS Code' }
   ];
 
   function createLogoLoop(container, logos, options) {
@@ -142,12 +142,12 @@
 
   // Client / partner logos for the "Companies we work with" strip
   var CLIENT_LOGOS = [
-    { src: 'assets/videos-images/orange-logo.png',            alt: 'Orange',              title: 'Orange' },
-    { src: 'assets/videos-images/theplatformjo_logo.jpg',     alt: 'The Platform',        title: 'The Platform' },
-    { src: 'assets/videos-images/hivejor_logo.jpg',           alt: 'Hive',                title: 'Hive' },
-    { src: 'assets/videos-images/innovation_club_gju_logo.jpg', alt: 'Innovation Club GJU', title: 'Innovation Club GJU' },
-    { src: 'assets/videos-images/gju-language-logo.jpg',      alt: 'GJU Language',        title: 'GJU Language' },
-    { src: 'assets/videos-images/bpwa.png',                   alt: 'BPWA',                title: 'BPWA' }
+    { src: '/assets/videos-images/orange-logo.png',            alt: 'Orange',              title: 'Orange' },
+    { src: '/assets/videos-images/theplatformjo_logo.jpg',     alt: 'The Platform',        title: 'The Platform' },
+    { src: '/assets/videos-images/hivejor_logo.jpg',           alt: 'Hive',                title: 'Hive' },
+    { src: '/assets/videos-images/innovation_club_gju_logo.jpg', alt: 'Innovation Club GJU', title: 'Innovation Club GJU' },
+    { src: '/assets/videos-images/gju-language-logo.jpg',      alt: 'GJU Language',        title: 'GJU Language' },
+    { src: '/assets/videos-images/bpwa.png',                   alt: 'BPWA',                title: 'BPWA' }
   ];
 
   document.addEventListener('DOMContentLoaded', function () {

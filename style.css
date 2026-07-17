@@ -2222,3 +2222,128 @@ html {
         text-align: center;
     }
 }
+
+/* ========================================
+   SECTION: ARABIC / RTL
+   Arabic pages set lang="ar" dir="rtl". IBM Plex Sans Arabic
+   replaces both the display and body faces (Anton and Inter
+   have no Arabic glyphs); letter-spacing is reset because
+   spacing breaks Arabic letter joining.
+   ======================================== */
+html[lang="ar"] {
+    --font-display: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+    --font-main: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+}
+
+html[lang="ar"] .hero-title,
+html[lang="ar"] .section-title,
+html[lang="ar"] .cta-title,
+html[lang="ar"] .tm-word {
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+html[lang="ar"] .hero-title {
+    font-size: clamp(2.4rem, 6.4vw, 4.6rem);
+    line-height: 1.18;
+}
+
+html[lang="ar"].home-page .hero-title,
+html[lang="ar"] .home-page .hero-title {
+    font-size: clamp(2.6rem, 7.5vw, 5.4rem);
+}
+
+html[lang="ar"] .section-title {
+    line-height: 1.25;
+}
+
+html[lang="ar"] .hero-kicker,
+html[lang="ar"] .section-label {
+    letter-spacing: 0;
+}
+
+/* Mirrored details */
+[dir="rtl"] .nav-link::before {
+    margin-right: 0;
+    margin-left: 5px;
+}
+
+[dir="rtl"] .feature-list li {
+    padding-left: 0;
+    padding-right: 1.5rem;
+}
+
+[dir="rtl"] .feature-list li::before {
+    left: auto;
+    right: 0;
+    content: "←";
+}
+
+[dir="rtl"] .grid-card::before {
+    left: auto;
+    right: var(--space-md);
+}
+
+[dir="rtl"] .process-line {
+    transform-origin: right center;
+}
+
+[dir="rtl"] .process-line.reveal {
+    transform-origin: right center;
+}
+
+[dir="rtl"] .hero-object {
+    right: auto;
+    left: max(-4vw, -60px);
+}
+
+[dir="rtl"] .cta-form-wrapper {
+    border-left: none;
+    border-right: 1px solid var(--border);
+    padding: var(--space-md) var(--space-md) var(--space-md) 0;
+}
+
+@media (max-width: 960px) {
+    [dir="rtl"] .hero-object {
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@media (max-width: 992px) {
+    [dir="rtl"] .cta-form-wrapper {
+        border-right: none;
+        border-top: 1px solid var(--border);
+        padding: var(--space-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    [dir="rtl"] .feature-list li {
+        padding-right: 0;
+    }
+
+    [dir="rtl"] .grid-card::before {
+        right: 50%;
+        transform: translateX(50%);
+    }
+}
+
+/* Language toggle in the header */
+.lang-toggle {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lang-toggle:hover {
+    color: var(--accent);
+}

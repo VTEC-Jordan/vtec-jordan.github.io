@@ -400,6 +400,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form Submission Handlers
     // Integrates with Google Apps Script Web App for data persistence
     // -------------------------------------------------------
+    // Form status strings follow the page language (Arabic pages set lang="ar")
+    const IS_ARABIC = document.documentElement.lang === 'ar';
+    const FORM_MSG = {
+        sending: IS_ARABIC ? 'جارٍ الإرسال...' : 'Sending...',
+        contactOk: IS_ARABIC ? 'وصلتنا رسالتك! سنتواصل معك قريباً.' : "Message received! We'll be in touch soon.",
+        contactInvalid: IS_ARABIC ? 'يرجى إدخال اسم وبريد إلكتروني ورسالة بشكل صحيح.' : 'Please provide a valid name, email, and message.',
+        fail: IS_ARABIC ? 'تعذّر إرسال النموذج. تحقّق من اتصالك بالإنترنت أو راسلنا مباشرة على info@vtec-jo.com' : 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com'
+    };
+
     const CONTACT_SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbxyQx0BEll1ANb0y5q4h7MmMRoJWOqkLCjImOSinWhWIgkPUTwJ3JlVSAIAWnz6qJwS/exec';
     const WORKSHOP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgBYh-cQKFqSiyp2l9BUxB5HSMnOivuVb-_KoKgSs37p2rHic4pWuqcH8L0yePQbD/exec';
     const PARTNER_SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbzOjRzvJwkH19gIHoc9BmAtarj8akd21C7OOk0rMErWif1ULISMoi4GEHEbNjRTw4DV/exec';
@@ -422,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Sending...';
 
             if (isLikelyBotSubmission(contactForm)) {
-                setStatusMessage(formStatus, "Message received! We'll be in touch soon.", 'success');
+                setStatusMessage(formStatus, FORM_MSG.contactOk, 'success');
                 contactForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
@@ -438,7 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
             markFieldValidity(document.getElementById('message'), Boolean(message));
 
             if (!name || !isValidEmail(email) || !message) {
-                setStatusMessage(formStatus, 'Please provide a valid name, email, and message.', 'error');
+                setStatusMessage(formStatus, FORM_MSG.contactInvalid, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
                 return;
@@ -453,13 +462,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: payload
             })
             .then(() => {
-                setStatusMessage(formStatus, "Message received! We'll be in touch soon.", 'success');
+                setStatusMessage(formStatus, FORM_MSG.contactOk, 'success');
                 contactForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
             })
             .catch(() => {
-                setStatusMessage(formStatus, 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com', 'error');
+                setStatusMessage(formStatus, FORM_MSG.fail, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
             });
