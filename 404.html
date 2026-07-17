@@ -155,6 +155,8 @@
                 if (home) home.setAttribute('href', '/ar/');
                 var contact = document.getElementById('error-contact-btn');
                 if (contact) contact.setAttribute('href', '/ar/#contact');
+                var egg = document.getElementById('error-egg-link');
+                if (egg) egg.setAttribute('href', '/easter-egg.html?lang=ar');
             });
         })();
     </script>
@@ -201,7 +203,7 @@
         <div class="error-content">
             <span class="error-label" id="error-label">Error</span>
             <!-- Clicking the 404 itself triggers the easter egg -->
-            <a class="error-code-link" href="/easter-egg.html" title="🤫" tabindex="-1" aria-hidden="true">
+            <a class="error-code-link" id="error-egg-link" href="/easter-egg.html" title="🤫" tabindex="-1" aria-hidden="true">
                 <div class="error-code" aria-label="404">404</div>
             </a>
             <h1 class="error-title" id="error-title">Page Not Found</h1>
