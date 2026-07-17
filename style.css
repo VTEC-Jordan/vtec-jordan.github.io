@@ -2331,7 +2331,7 @@ html[lang="ar"] .section-label {
     }
 }
 
-/* Language toggle in the header */
+/* Language toggle in the header: flag + label */
 .lang-toggle {
     font-family: var(--font-mono);
     font-size: 0.85rem;
@@ -2342,8 +2342,16 @@ html[lang="ar"] .section-label {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 7px;
+    white-space: nowrap;
 }
 
 .lang-toggle:hover {
     color: var(--accent);
+}
+
+.lang-toggle .flag {
+    display: block;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px var(--border);
 }
