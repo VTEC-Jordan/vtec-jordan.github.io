@@ -14,18 +14,18 @@
     <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()">
 
     <!-- Favicon -->
-    <link rel="icon" href="assets/favicon-untitled-16.png?v=3" type="image/png" sizes="16x16">
+    <link rel="icon" href="/assets/favicon-untitled-16.png?v=3" type="image/png" sizes="16x16">
     <link rel="manifest" href="/manifest.json">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#FDFCFB" media="(prefers-color-scheme: light)">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=20260722">
+    <link rel="stylesheet" href="/style.css?v=20260722">
 
     <style>
         .error-page-main {
@@ -130,29 +130,56 @@
         }
     </style>
 
-    <script defer src="script.js?v=20260722"></script>
+    <script defer src="/script.js?v=20260722"></script>
+
+    <!-- Arabic-aware 404: GitHub Pages serves this page for missing /ar/ URLs too -->
+    <script>
+        (function () {
+            if (!location.pathname.startsWith('/ar/')) return;
+            document.documentElement.lang = 'ar';
+            document.documentElement.dir = 'rtl';
+            document.addEventListener('DOMContentLoaded', function () {
+                document.title = '404 – الصفحة غير موجودة | VTEC';
+                var translations = {
+                    'error-label': 'خطأ',
+                    'error-title': 'الصفحة غير موجودة',
+                    'error-desc': 'يبدو أن الصفحة التي تبحث عنها غير موجودة أو تم نقلها.',
+                    'error-home-btn': 'العودة إلى الرئيسية',
+                    'error-contact-btn': 'تواصل معنا'
+                };
+                for (var id in translations) {
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = translations[id];
+                }
+                var home = document.getElementById('error-home-btn');
+                if (home) home.setAttribute('href', '/ar/');
+                var contact = document.getElementById('error-contact-btn');
+                if (contact) contact.setAttribute('href', '/ar/#contact');
+            });
+        })();
+    </script>
 </head>
 <body class="home-page">
 
     <header id="header" class="header">
         <div class="container">
             <div class="header-inner">
-                <a href="index.html" class="logo" aria-label="VTEC Home">
+                <a href="/" class="logo" aria-label="VTEC Home">
                     <span class="logo-text" aria-hidden="true">
-                        <img class="brand-logo-svg" src="assets/videos-images/logo-3-clean.svg?v=20260423" alt="VTEC logo" width="172" height="172">
+                        <img class="brand-logo-svg" src="/assets/videos-images/logo-3-clean.svg?v=20260423" alt="VTEC logo" width="172" height="172">
                     </span>
                 </a>
                 <nav class="nav" id="nav-menu" aria-label="Main navigation">
                     <ul class="nav-list">
-                        <li><a href="index.html" class="nav-link">Home</a></li>
-                        <li><a href="products.html" class="nav-link">Products</a></li>
-                        <li><a href="how-we-work.html" class="nav-link">How We Work</a></li>
-                        <li><a href="workshops.html" class="nav-link">Workshops</a></li>
-                        <li><a href="partner.html" class="nav-link">Partner with us</a></li>
+                        <li><a href="/" class="nav-link">Home</a></li>
+                        <li><a href="/products.html" class="nav-link">Products</a></li>
+                        <li><a href="/how-we-work.html" class="nav-link">How We Work</a></li>
+                        <li><a href="/workshops.html" class="nav-link">Workshops</a></li>
+                        <li><a href="/partner.html" class="nav-link">Partner with us</a></li>
                     </ul>
                 </nav>
                 <div class="header-actions">
-                    <a href="index.html#contact" class="btn btn-primary btn-sm">Contact Us</a>
+                    <a href="/#contact" class="btn btn-primary btn-sm">Contact Us</a>
                     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
                         <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                         <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -172,18 +199,18 @@
         <div class="error-grid" aria-hidden="true"></div>
 
         <div class="error-content">
-            <span class="error-label">Error</span>
+            <span class="error-label" id="error-label">Error</span>
             <!-- Clicking the 404 itself triggers the easter egg -->
-            <a class="error-code-link" href="easter-egg.html" title="🤫" tabindex="-1" aria-hidden="true">
+            <a class="error-code-link" href="/easter-egg.html" title="🤫" tabindex="-1" aria-hidden="true">
                 <div class="error-code" aria-label="404">404</div>
             </a>
-            <h1 class="error-title">Page Not Found</h1>
-            <p class="error-desc">
+            <h1 class="error-title" id="error-title">Page Not Found</h1>
+            <p class="error-desc" id="error-desc">
                 We couldn't find what you were looking for. It might have moved, been deleted, or perhaps never existed. The engineers have been notified.
             </p>
             <div class="error-actions">
-                <a href="index.html" class="btn btn-primary">Back to Home</a>
-                <a href="index.html#contact" class="btn btn-secondary">Contact Us</a>
+                <a href="/" class="btn btn-primary" id="error-home-btn">Back to Home</a>
+                <a href="/#contact" class="btn btn-secondary" id="error-contact-btn">Contact Us</a>
             </div>
         </div>
     </main>
@@ -191,7 +218,7 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-inner">
-                <a href="index.html" class="footer-logo">VTEC</a>
+                <a href="/" class="footer-logo">VTEC</a>
                 <p class="footer-tagline">Technology and innovation consultancy for organizations, government entities, and startups.</p>
                 <div class="footer-icons">
                     <a href="mailto:info@vtec-jo.com" class="footer-icon-btn" aria-label="Email us at info@vtec-jo.com" title="Email us">
