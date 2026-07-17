@@ -126,6 +126,7 @@ img {
     border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
     position: relative;
     overflow: hidden;
+    white-space: nowrap;
     transition: background-color var(--transition), color var(--transition), border-color var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
@@ -250,12 +251,17 @@ select:focus-visible {
     transform: translateY(-100%);
 }
 
+/* The header spans wider than the content column so the nav breathes */
+.header .container {
+    max-width: 1380px;
+}
+
 .header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    gap: var(--space-lg);
+    gap: var(--space-md);
 }
 
 .logo {
@@ -267,7 +273,7 @@ select:focus-visible {
     line-height: 1;
     letter-spacing: 0.05em;
     color: var(--text);
-    margin-right: var(--space-lg);
+    margin-right: var(--space-md);
     flex-shrink: 0;
 }
 
@@ -288,7 +294,7 @@ select:focus-visible {
 
 .nav-list {
     display: flex;
-    gap: var(--space-lg);
+    gap: clamp(1rem, 2vw, 2.2rem);
 }
 
 .nav-link {
@@ -296,6 +302,7 @@ select:focus-visible {
     font-weight: 500;
     color: var(--text);
     position: relative;
+    white-space: nowrap;
 }
 
 .nav-link::after {
