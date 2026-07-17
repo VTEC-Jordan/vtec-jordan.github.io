@@ -151,6 +151,7 @@
   ];
 
   document.addEventListener('DOMContentLoaded', function () {
+    var AR = document.documentElement.lang === 'ar';
     var el = document.getElementById('logo-loop-mount');
     if (el) {
       createLogoLoop(el, LOGOS, {
@@ -159,7 +160,7 @@
         gap:        72,
         hoverSpeed: 0,
         fadeOut:    true,
-        ariaLabel:  'Technology stack'
+        ariaLabel:  AR ? 'التقنيات التي نبني بها' : 'Technology stack'
       });
     }
 
@@ -171,7 +172,7 @@
         gap:        84,
         hoverSpeed: 0,
         fadeOut:    true,
-        ariaLabel:  'Companies we work with'
+        ariaLabel:  AR ? 'شركات نعمل معها' : 'Companies we work with'
       });
     }
   });

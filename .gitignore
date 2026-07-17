@@ -27,3 +27,7 @@ package-lock.json
 components.json
 .mcp.json
 *.log
+
+# AI agent tooling — internal, must never be published to the site
+.agents/
+.claude/

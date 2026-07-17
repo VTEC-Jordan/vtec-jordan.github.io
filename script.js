@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
+    const PAGE_AR = document.documentElement.lang === 'ar';
+
     // -------------------------------------------------------
     // Services Slider
     // Shows 4 cards at a time, slides through all 7 services
@@ -36,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < pages; i++) {
                 const dot = document.createElement('button');
                 dot.className = 'slider-dot' + (i === current ? ' active' : '');
-                dot.setAttribute('aria-label', `Go to page ${i + 1}`);
+                dot.setAttribute('aria-label', PAGE_AR ? `الانتقال إلى الصفحة ${i + 1}` : `Go to page ${i + 1}`);
                 dot.addEventListener('click', () => goToAnimated(i));
                 dotsContainer.appendChild(dot);
             }
@@ -131,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < wTotalPages(); i++) {
                 const dot = document.createElement('button');
                 dot.className = 'slider-dot' + (i === wCurrent ? ' active' : '');
-                dot.setAttribute('aria-label', `Go to page ${i + 1}`);
+                dot.setAttribute('aria-label', PAGE_AR ? `الانتقال إلى الصفحة ${i + 1}` : `Go to page ${i + 1}`);
                 dot.addEventListener('click', () => wGoToAnimated(i));
                 wDotsContainer.appendChild(dot);
             }
@@ -401,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Integrates with Google Apps Script Web App for data persistence
     // -------------------------------------------------------
     // Form status strings follow the page language (Arabic pages set lang="ar")
-    const IS_ARABIC = document.documentElement.lang === 'ar';
+    const IS_ARABIC = PAGE_AR;
     const FORM_MSG = {
         sending: IS_ARABIC ? 'جارٍ الإرسال...' : 'Sending...',
         contactOk: IS_ARABIC ? 'وصلتنا رسالتك! سنتواصل معك قريباً.' : "Message received! We'll be in touch soon.",
