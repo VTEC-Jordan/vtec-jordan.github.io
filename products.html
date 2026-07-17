@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Products | OrbitBook by VTEC</title>
+    <meta name="description" content="OrbitBook is VTEC's booking platform for small businesses in Jordan: a bilingual Arabic/English booking page for your customers and a full dashboard for you. Built and run by VTEC.">
+    <meta name="keywords" content="OrbitBook, booking platform Jordan, appointment scheduling, bilingual booking system, Arabic booking page, VTEC products">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="language" content="English">
+    <link rel="canonical" href="https://www.vtec-jo.com/products.html">
+    <link rel="alternate" hreflang="en" href="https://www.vtec-jo.com/products.html">
+
+    <!-- Security -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()">
+
+    <!-- SEO & Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.vtec-jo.com/products.html">
+    <meta property="og:site_name" content="VTEC">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Products | OrbitBook by VTEC">
+    <meta property="og:description" content="OrbitBook — bookings that orbit your business. A bilingual Arabic/English booking platform for small businesses, built and run by VTEC.">
+    <meta property="og:image" content="https://www.vtec-jo.com/assets/og-image.png?v=20260423-logo4">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@vtecjo">
+    <meta name="twitter:title" content="OrbitBook by VTEC">
+    <meta name="twitter:description" content="Bookings that orbit your business. A bilingual booking platform for small businesses in Jordan, built and run by VTEC.">
+    <meta name="twitter:image" content="https://www.vtec-jo.com/assets/og-image.png?v=20260423-logo4">
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon-untitled-16.png?v=3" type="image/png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="style.css?v=20260714" as="style">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+    <!-- Fonts (Instrument Serif is OrbitBook's wordmark face) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#FDFCFB" media="(prefers-color-scheme: light)">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=20260714">
+
+    <!-- Page-specific styles: OrbitBook showcase -->
+    <style>
+        /* OrbitBook's own brand tokens — used only inside the showcase */
+        .ob-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-radius: calc(var(--radius) + 2px);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .ob-panel {
+            padding: clamp(2rem, 5vw, 3.5rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.1rem;
+            text-align: center;
+            min-height: 320px;
+        }
+
+        .ob-panel--day {
+            background:
+                radial-gradient(120% 90% at 80% 10%, rgba(226, 102, 29, 0.12), transparent 60%),
+                #FAF6F0;
+            color: #1A1815;
+        }
+
+        .ob-panel--night {
+            background:
+                radial-gradient(120% 90% at 20% 90%, rgba(124, 108, 255, 0.22), transparent 60%),
+                #0A0818;
+            color: #F0ECFF;
+        }
+
+        .ob-wordmark {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+            letter-spacing: -0.01em;
+        }
+
+        .ob-tagline {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 34ch;
+            opacity: 0.75;
+        }
+
+        .ob-theme-label {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            opacity: 0.55;
+        }
+
+        .ob-mark {
+            display: block;
+        }
+
+        @keyframes ob-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ob-mark--spin {
+            animation: ob-spin 26s linear infinite;
+            transform-origin: center;
+        }
+
+        /* Product intro row: mark + name beside the section body */
+        .product-head {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Auto side-margins from .centered .section-title spread flex
+           siblings to the edges — neutralize them inside the head row */
+        .product-head .section-title {
+            margin: 0;
+            max-width: none;
+        }
+
+        /* The global subtitle pulls itself up with a negative margin;
+           on this page it lands under the display titles */
+        .section-header .section-subtitle {
+            margin-top: var(--space-xs);
+        }
+
+        .product-status {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+            border-radius: 3px;
+            padding: 4px 10px;
+        }
+
+        .product-ctas {
+            display: flex;
+            gap: var(--space-sm);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: var(--space-md);
+        }
+
+        .product-note {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: var(--space-sm);
+        }
+
+        .tracks-intro {
+            max-width: 640px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .tracks-intro p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.65;
+        }
+
+        /* Feature grid reuses .grid-card; on this page cards sit 3-up */
+        .product-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .product-features .grid-card {
+            grid-column: auto;
+        }
+
+        @media (max-width: 960px) {
+            .product-features {
+                grid-template-columns: 1fr;
+            }
+
+            .ob-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .ob-mark--spin {
+                animation: none;
+            }
+        }
+    </style>
+
+    <!-- JS -->
+    <script defer src="script.js?v=20260714"></script>
+</head>
+<body>
+
+    <header id="header" class="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="index.html" class="logo" aria-label="VTEC Home">
+                    <span class="logo-text" aria-hidden="true">
+                        <img class="brand-logo-svg" src="assets/videos-images/logo-3-clean.svg?v=20260423" alt="VTEC logo" width="172" height="172">
+                    </span>
+                </a>
+                <nav class="nav" id="nav-menu" aria-label="Main navigation">
+                    <ul class="nav-list">
+                        <li><a href="index.html#hero" class="nav-link">Home</a></li>
+                        <li><a href="products.html" class="nav-link" aria-current="page">Products</a></li>
+                        <li><a href="how-we-work.html" class="nav-link">How We Work</a></li>
+                        <li><a href="workshops.html" class="nav-link">Workshops</a></li>
+                        <li><a href="partner.html" class="nav-link">Partner with us</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a href="index.html#contact" class="btn btn-primary btn-sm">Contact Us</a>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="home-main">
+        <canvas class="shader-bg" id="shader-bg" aria-hidden="true"></canvas>
+
+        <!-- Hero -->
+        <section class="hero hero-background-paths" id="hero">
+            <canvas class="hero-object" id="hero-object" data-shape="orbit" aria-hidden="true"></canvas>
+            <div class="container">
+                <div class="hero-content">
+                    <span class="section-label">[ Products ]</span>
+                    <h1 class="hero-title">We build products too.</h1>
+                    <p class="hero-description">VTEC doesn't just advise and deliver for clients. We build and run our own software. OrbitBook is the first product out of our venture studio.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- What is OrbitBook -->
+        <section class="section" id="orbitbook">
+            <div class="container">
+                <div class="section-header centered">
+                    <span class="section-label">Product 01</span>
+                    <div class="product-head">
+                        <svg class="ob-mark" width="52" height="52" viewBox="0 0 100 100" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="obSeam" x1="0" y1="1" x2="1" y2="0">
+                                    <stop offset="0%" stop-color="#E19257"/>
+                                    <stop offset="48%" stop-color="#D07A63"/>
+                                    <stop offset="100%" stop-color="#8E7BFF"/>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="37" fill="none" stroke="url(#obSeam)" stroke-width="6"/>
+                            <circle cx="76.2" cy="23.8" r="8.5" fill="#F2A65A"/>
+                        </svg>
+                        <h2 class="section-title">OrbitBook</h2>
+                        <span class="product-status">Closed Beta</span>
+                    </div>
+                    <p class="section-subtitle">Bookings that orbit your business — arriving, confirmed, dependable.</p>
+                </div>
+                <div class="tracks-intro">
+                    <p>OrbitBook is a booking platform for small businesses in Jordan and the region. Your customers get a clean booking page in Arabic or English where they pick a time in seconds — no account, no app. You get a full dashboard: calendar, services, working hours, notifications, and reports. Built, hosted, and run entirely by VTEC.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature grid -->
+        <section class="section" id="orbitbook-features">
+            <div class="container">
+                <div class="section-header centered">
+                    <span class="section-label">What it does</span>
+                    <h2 class="section-title">Everything a booking needs</h2>
+                </div>
+                <div class="product-features">
+                    <div class="grid-card">
+                        <h3>Bilingual by design</h3>
+                        <p>Arabic and English are both first-class: the booking page, the dashboard, emails, and notifications all switch language — with proper right-to-left layout, not an afterthought.</p>
+                    </div>
+                    <div class="grid-card">
+                        <h3>A booking page, not an app</h3>
+                        <p>Every business gets its own public page with its logo, colors, and services. Customers book in seconds from any phone — no download, no sign-up.</p>
+                    </div>
+                    <div class="grid-card">
+                        <h3>No double-bookings. Ever.</h3>
+                        <p>Availability comes from your real working hours and closures, and the platform makes overlapping bookings impossible at the database level.</p>
+                    </div>
+                    <div class="grid-card">
+                        <h3>A calendar you'll actually use</h3>
+                        <p>Day, week, and month views of every booking, with filters and one-click CSV export when you need the numbers somewhere else.</p>
+                    </div>
+                    <div class="grid-card">
+                        <h3>Confirmations that arrive</h3>
+                        <p>Customers get confirmation and reminder emails in their own language. You get an alert in your inbox and in the dashboard the moment a booking lands or cancels.</p>
+                    </div>
+                    <div class="grid-card">
+                        <h3>Your brand, day and night</h3>
+                        <p>Upload your logo, pick your accent color, and the whole experience follows — including a full light and dark theme across every screen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brand showcase: OrbitBook's day/night identity -->
+        <section class="section" id="orbitbook-brand">
+            <div class="container">
+                <div class="section-header centered">
+                    <span class="section-label">The identity</span>
+                    <h2 class="section-title">From dawn to a moonlit sky</h2>
+                </div>
+                <div class="ob-showcase">
+                    <div class="ob-panel ob-panel--day">
+                        <svg class="ob-mark ob-mark--spin" width="72" height="72" viewBox="0 0 100 100" aria-hidden="true">
+                            <circle cx="50" cy="50" r="37" fill="none" stroke="url(#obSeam)" stroke-width="6"/>
+                            <circle cx="76.2" cy="23.8" r="8.5" fill="#F2A65A"/>
+                        </svg>
+                        <span class="ob-wordmark">OrbitBook</span>
+                        <p class="ob-tagline">The business is the centre; bookings orbit around it like clockwork.</p>
+                        <span class="ob-theme-label">Day · dawn amber</span>
+                    </div>
+                    <div class="ob-panel ob-panel--night">
+                        <svg class="ob-mark ob-mark--spin" width="72" height="72" viewBox="0 0 100 100" aria-hidden="true" style="color:#A596FF;">
+                            <circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" stroke-width="6"/>
+                            <circle cx="76.2" cy="23.8" r="8.5" fill="currentColor"/>
+                        </svg>
+                        <span class="ob-wordmark">OrbitBook</span>
+                        <p class="ob-tagline">Bookings arrive around the clock — confirmed, dependable, waiting for you at dawn.</p>
+                        <span class="ob-theme-label">Night · deep-space violet</span>
+                    </div>
+                </div>
+                <p class="product-note">A VTEC JO product · designed and engineered in Amman</p>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section" id="orbitbook-cta">
+            <div class="container">
+                <div class="section-header centered">
+                    <span class="section-label">Try it</span>
+                    <h2 class="section-title">See OrbitBook live</h2>
+                    <p class="section-subtitle">OrbitBook is live and running in closed beta. Visit the site to see it in action, or get in touch to join the beta with your business.</p>
+                </div>
+                <div class="product-ctas">
+                    <a href="https://orbitbook.vtec-jo.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Visit OrbitBook</a>
+                    <a href="mailto:sales@orbitbook.vtec-jo.com" class="btn btn-secondary">Request beta access</a>
+                </div>
+                <p class="product-note">Invite-only while we onboard the first businesses</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <a href="index.html#hero" class="footer-logo">VTEC</a>
+                <p class="footer-tagline">Technology and innovation consultancy for organizations, government entities, and startups.</p>
+                <div class="footer-icons">
+                    <a href="mailto:info@vtec-jo.com" class="footer-icon-btn" aria-label="Email us at info@vtec-jo.com" title="Email us">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/company/venture-tech-consultancy/?viewAsMember=true" class="footer-icon-btn" target="_blank" rel="noopener noreferrer" aria-label="Visit our LinkedIn profile" title="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    </a>
+                </div>
+                <p class="footer-copy">&copy; VTEC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -888,11 +888,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 return { verts: normalizeVerts(verts, 1.9), edges };
+            },
+            // OrbitBook: an orbit ring, a tilted inner orbit, and one
+            // luminous booking dot riding the outer ring
+            orbit() {
+                const verts = [], edges = [];
+                const N = 26;
+                for (let i = 0; i < N; i++) {
+                    const a = (i / N) * Math.PI * 2;
+                    verts.push([Math.cos(a) * 1.9, 0, Math.sin(a) * 1.9]);
+                    edges.push([i, (i + 1) % N]);
+                }
+                const M = 18;
+                for (let j = 0; j < M; j++) {
+                    const a = (j / M) * Math.PI * 2;
+                    verts.push([Math.cos(a) * 1.15, Math.sin(a) * 0.95, Math.sin(a) * 0.55]);
+                    edges.push([N + j, N + ((j + 1) % M)]);
+                }
+                verts.push([Math.cos(0.9) * 1.9, 0, Math.sin(0.9) * 1.9]);
+                return { verts, edges, feature: N + M };
             }
         };
 
         const make = SHAPES[canvas.dataset.shape] || SHAPES.icosahedron;
-        const { verts, edges } = make();
+        const { verts, edges, feature } = make();
         const dotRadius = verts.length > 20 ? 1.7 : 2.4;
 
         let accent = '#006D77';
@@ -988,10 +1007,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.lineTo(pts[j][0], pts[j][1]);
                 ctx.stroke();
             });
-            pts.forEach(([x, y, z]) => {
-                ctx.globalAlpha = 0.25 + (z + 2) * 0.16;
+            pts.forEach(([x, y, z], i) => {
+                const isFeature = i === feature;
+                ctx.globalAlpha = isFeature ? 0.55 + (z + 2) * 0.2 : 0.25 + (z + 2) * 0.16;
                 ctx.beginPath();
-                ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+                ctx.arc(x, y, isFeature ? dotRadius * 3.4 : dotRadius, 0, Math.PI * 2);
                 ctx.fill();
             });
             ctx.globalAlpha = 1;
