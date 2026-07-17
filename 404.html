@@ -157,6 +157,28 @@
                 if (contact) contact.setAttribute('href', '/ar/#contact');
                 var egg = document.getElementById('error-egg-link');
                 if (egg) egg.setAttribute('href', '/easter-egg.html?lang=ar');
+
+                var navAr = [
+                    ['الرئيسية', '/ar/#hero'],
+                    ['المنتجات', '/ar/products.html'],
+                    ['كيف نعمل', '/ar/how-we-work.html'],
+                    ['ورش العمل', '/ar/workshops.html'],
+                    ['كن شريكنا', '/ar/partner.html']
+                ];
+                document.querySelectorAll('.nav-list .nav-link').forEach(function (a, i) {
+                    if (navAr[i]) { a.textContent = navAr[i][0]; a.setAttribute('href', navAr[i][1]); }
+                });
+                var cbtn = document.querySelector('.header-actions .btn');
+                if (cbtn) { cbtn.textContent = 'تواصل معنا'; cbtn.setAttribute('href', '/ar/#contact'); }
+                var logo = document.querySelector('a.logo');
+                if (logo) logo.setAttribute('href', '/ar/');
+                var ftag = document.querySelector('.footer-tagline');
+                if (ftag) ftag.textContent = 'استشارات تكنولوجيا وابتكار للمؤسسات والجهات الحكومية والشركات الناشئة.';
+                var fcopy = document.querySelector('.footer-copy');
+                if (fcopy) fcopy.textContent = '© VTEC. جميع الحقوق محفوظة.';
+                var flogo = document.querySelector('.footer-logo');
+                if (flogo) flogo.setAttribute('href', '/ar/');
+
             });
         })();
     </script>
