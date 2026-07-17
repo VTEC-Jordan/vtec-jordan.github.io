@@ -940,11 +940,6 @@ select:focus-visible {
     display: block;
 }
 
-/* Dark chip for white-on-transparent logos so they read in light mode */
-.logo-item--chip {
-    background: #14181A;
-    border-radius: 10px;
-}
 
 /* ========================================
    SECTION: FORMS & INPUTS
