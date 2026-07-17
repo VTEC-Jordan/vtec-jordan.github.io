@@ -406,6 +406,9 @@ document.addEventListener('DOMContentLoaded', () => {
         sending: IS_ARABIC ? 'جارٍ الإرسال...' : 'Sending...',
         contactOk: IS_ARABIC ? 'وصلتنا رسالتك! سنتواصل معك قريباً.' : "Message received! We'll be in touch soon.",
         contactInvalid: IS_ARABIC ? 'يرجى إدخال اسم وبريد إلكتروني ورسالة بشكل صحيح.' : 'Please provide a valid name, email, and message.',
+        partnerOk: IS_ARABIC ? 'وصلنا استفسارك! سنتواصل معك خلال يومي عمل.' : "Inquiry received! We'll be in touch within 2 business days.",
+        workshopOk: IS_ARABIC ? 'تم استلام تسجيلك! سنوافيك بتفاصيل الورشة قريباً.' : "Registration received! We'll be in touch with workshop details soon.",
+        requiredInvalid: IS_ARABIC ? 'يرجى تعبئة جميع الحقول المطلوبة بمعلومات صحيحة.' : 'Please complete all required fields with valid information.',
         fail: IS_ARABIC ? 'تعذّر إرسال النموذج. تحقّق من اتصالك بالإنترنت أو راسلنا مباشرة على info@vtec-jo.com' : 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com'
     };
 
@@ -423,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formStatus = document.getElementById('form-status');
-            setStatusMessage(formStatus, 'Sending...');
+            setStatusMessage(formStatus, FORM_MSG.sending);
 
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -485,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
         partnerForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formStatus = document.getElementById('partner-form-status');
-            setStatusMessage(formStatus, 'Sending...');
+            setStatusMessage(formStatus, FORM_MSG.sending);
 
             const submitBtn = partnerForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -493,7 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Sending...';
 
             if (isLikelyBotSubmission(partnerForm)) {
-                setStatusMessage(formStatus, 'Inquiry received! We\'ll be in touch within 2 business days.', 'success');
+                setStatusMessage(formStatus, FORM_MSG.partnerOk, 'success');
                 partnerForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
@@ -514,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
             markFieldValidity(document.getElementById('message'), Boolean(message));
 
             if (!companyName || !contactName || !isValidEmail(email) || !partnershipType || !message) {
-                setStatusMessage(formStatus, 'Please complete all required fields with valid information.', 'error');
+                setStatusMessage(formStatus, FORM_MSG.requiredInvalid, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
                 return;
@@ -530,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.result === 'success') {
-                    setStatusMessage(formStatus, 'Inquiry received! We\'ll be in touch within 2 business days.', 'success');
+                    setStatusMessage(formStatus, FORM_MSG.partnerOk, 'success');
                     partnerForm.reset();
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalBtnText;
@@ -539,7 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(() => {
-                setStatusMessage(formStatus, 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com', 'error');
+                setStatusMessage(formStatus, FORM_MSG.fail, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
             });
@@ -556,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
         workshopForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const formStatus = document.getElementById('workshop-form-status');
-            setStatusMessage(formStatus, 'Sending...');
+            setStatusMessage(formStatus, FORM_MSG.sending);
 
             const submitBtn = workshopForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -564,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Sending...';
 
             if (isLikelyBotSubmission(workshopForm)) {
-                setStatusMessage(formStatus, 'Registration received! We\'ll be in touch with workshop details soon.', 'success');
+                setStatusMessage(formStatus, FORM_MSG.workshopOk, 'success');
                 workshopForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
@@ -585,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
             markFieldValidity(document.getElementById('workshop-interest'), Boolean(workshopInterest));
 
             if (!name || !isValidEmail(email) || !workshopInterest) {
-                setStatusMessage(formStatus, 'Please complete all required fields with valid information.', 'error');
+                setStatusMessage(formStatus, FORM_MSG.requiredInvalid, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
                 return;
@@ -601,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.result === 'success') {
-                    setStatusMessage(formStatus, 'Registration received! We\'ll be in touch with workshop details soon.', 'success');
+                    setStatusMessage(formStatus, FORM_MSG.workshopOk, 'success');
                     workshopForm.reset();
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalBtnText;
@@ -610,7 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(() => {
-                setStatusMessage(formStatus, 'Form submission failed. Please check your internet connection or email us directly at info@vtec-jo.com', 'error');
+                setStatusMessage(formStatus, FORM_MSG.fail, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
             });
