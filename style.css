@@ -914,32 +914,6 @@ select:focus-visible {
     margin-bottom: var(--space-sm);
 }
 
-/* Logo Strip: Placeholder for partner and client logos */
-.logo-strip-placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--space-lg);
-}
-
-.logo-item-placeholder {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    padding: var(--space-sm) var(--space-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.logo-item-placeholder img {
-    max-height: 72px;
-    width: auto;
-    max-width: 200px;
-    object-fit: contain;
-    display: block;
-}
-
 
 /* ========================================
    SECTION: FORMS & INPUTS

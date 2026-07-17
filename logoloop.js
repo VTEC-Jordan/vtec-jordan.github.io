@@ -140,17 +140,40 @@
     }
   }
 
+  // Client / partner logos for the "Companies we work with" strip
+  var CLIENT_LOGOS = [
+    { src: 'assets/videos-images/orange-logo.png',            alt: 'Orange',              title: 'Orange' },
+    { src: 'assets/videos-images/theplatformjo_logo.jpg',     alt: 'The Platform',        title: 'The Platform' },
+    { src: 'assets/videos-images/hivejor_logo.jpg',           alt: 'Hive',                title: 'Hive' },
+    { src: 'assets/videos-images/innovation_club_gju_logo.jpg', alt: 'Innovation Club GJU', title: 'Innovation Club GJU' },
+    { src: 'assets/videos-images/gju-language-logo.jpg',      alt: 'GJU Language',        title: 'GJU Language' },
+    { src: 'assets/videos-images/bpwa.png',                   alt: 'BPWA',                title: 'BPWA' }
+  ];
+
   document.addEventListener('DOMContentLoaded', function () {
     var el = document.getElementById('logo-loop-mount');
-    if (!el) return;
-    createLogoLoop(el, LOGOS, {
-      speed:      80,
-      logoHeight: 44,
-      gap:        72,
-      hoverSpeed: 0,
-      fadeOut:    true,
-      ariaLabel:  'Technology stack'
-    });
+    if (el) {
+      createLogoLoop(el, LOGOS, {
+        speed:      80,
+        logoHeight: 44,
+        gap:        72,
+        hoverSpeed: 0,
+        fadeOut:    true,
+        ariaLabel:  'Technology stack'
+      });
+    }
+
+    var clientEl = document.getElementById('client-loop-mount');
+    if (clientEl) {
+      createLogoLoop(clientEl, CLIENT_LOGOS, {
+        speed:      -65,
+        logoHeight: 52,
+        gap:        84,
+        hoverSpeed: 0,
+        fadeOut:    true,
+        ariaLabel:  'Companies we work with'
+      });
+    }
   });
 
 })();

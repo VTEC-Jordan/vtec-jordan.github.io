@@ -1062,7 +1062,6 @@ document.addEventListener('DOMContentLoaded', () => {
             '.comparison-item',
             '.process-step',
             '.process-line',
-            '.logo-item-placeholder',
             '.cta-card',
             '.partner-form-wrapper',
             '.policy-section',
