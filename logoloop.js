@@ -166,7 +166,7 @@
     var clientEl = document.getElementById('client-loop-mount');
     if (clientEl) {
       createLogoLoop(clientEl, CLIENT_LOGOS, {
-        speed:      -65,
+        speed:      65,
         logoHeight: 52,
         gap:        84,
         hoverSpeed: 0,
