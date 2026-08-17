@@ -119,6 +119,10 @@ img {
     align-items: center;
     justify-content: center;
     padding: 0.8rem 1.6rem;
+    /* <button> does not inherit the page font from the UA stylesheet, so
+       without this the form submit buttons rendered in Arial while every
+       <a class="btn"> beside them used the brand face. */
+    font-family: inherit;
     font-weight: 500;
     font-size: 0.95rem;
     border-radius: calc(var(--radius) - 2px);
@@ -169,10 +173,13 @@ img {
     color: #121212;
 }
 
+/* Ghost, so filled teal means one thing on this site: book the call.
+   This was previously the same gradient as .btn-primary at a 4% different
+   mix, which rendered identically and gave the page no CTA hierarchy. */
 .btn-secondary {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 88%, #0e95a1 12%), var(--accent));
+    background: transparent;
     border-color: var(--accent);
-    color: #FFFFFF;
+    color: var(--accent);
 }
 
 .btn-secondary:hover {
@@ -188,7 +195,7 @@ img {
 }
 
 [data-theme="dark"] .btn-secondary {
-    color: #121212;
+    color: var(--accent);
 }
 
 [data-theme="dark"] .btn-secondary:hover {
@@ -420,6 +427,14 @@ select:focus-visible {
     z-index: 2;
 }
 
+/* The home hero title is broken into authored .hero-line spans, but at
+   the top of its clamp the first line needs ~1020px and the 800px prose
+   measure forced it to wrap, orphaning a single word. The measure still
+   applies to the paragraph, which sets its own 600px max-width. */
+.home-page .hero-content {
+    max-width: 1080px;
+}
+
 .hero-content .section-label,
 .hero-content .hero-title,
 .hero-content .hero-description,
@@ -603,11 +618,20 @@ select:focus-visible {
     margin-right: auto;
 }
 
+/* Sibling of .section-header: the negative top margin closes the gap
+   left by the header's own margin-bottom. */
 .section-subtitle {
     text-align: center;
     max-width: 700px;
     margin: calc(-1 * var(--space-md)) auto var(--space-lg);
     color: var(--text-muted);
+}
+
+/* Inside .section-header there is no gap to close, and the negative
+   margin drags the subtitle up underneath the display-type title. */
+.section-header .section-subtitle {
+    margin-top: var(--space-xs);
+    margin-bottom: 0;
 }
 
 /* Policy Pages: Security disclosures and acknowledgements */
@@ -759,8 +783,9 @@ select:focus-visible {
     background: none;
     border: 1px solid var(--border);
     color: var(--text);
-    width: 40px;
-    height: 40px;
+    /* 44px is the tap-target floor the rest of the controls hold to. */
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 1rem;
@@ -925,17 +950,16 @@ select:focus-visible {
 /* ========================================
    SECTION: FORMS & INPUTS
    ======================================== */
+/* Flat like every other section. This was the only tinted, rounded,
+   shadowed panel left on the page, and it sat at the close, which made
+   the demoted email fallback outweigh the booking CTA above it. */
 .cta-card {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    background-color: var(--bg-alt);
     color: var(--text);
-    padding: var(--space-lg);
+    padding: var(--space-lg) 0 0;
     column-gap: var(--space-lg);
-    border-radius: calc(var(--radius) + 4px);
-    box-shadow: var(--shadow-soft);
-    border: 1px solid color-mix(in srgb, var(--accent) 14%, var(--border));
-    overflow: hidden;
+    border-top: 1px solid var(--border);
 }
 
 .cta-title {
@@ -967,6 +991,7 @@ select:focus-visible {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     font-size: 0.875rem;
+    min-height: 44px; /* touch target floor */
 }
 
 .contact-link {
@@ -1014,12 +1039,16 @@ select:focus-visible {
     font-weight: 500;
 }
 
+/* This underline is the field's only boundary at rest, so it has to meet
+   the 3:1 non-text contrast bar rather than the decorative --border
+   token, which measured 1.25:1 against both --bg-alt and --card-bg.
+   50% of --text measures 3.25:1 light and 4.64:1 dark. */
 .form-group input,
 .form-group textarea {
     width: 100%;
     padding: 0.8rem 0;
     border: none;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid color-mix(in srgb, var(--text) 50%, transparent);
     background: transparent;
     color: var(--text);
     font-family: inherit;
@@ -1216,14 +1245,17 @@ select:focus-visible {
 
 .form-group .required {
     color: var(--accent);
-    margin-left: 2px;
+    /* Logical, so the gap stays between the label and the mark in RTL
+       without needing a mirrored override. */
+    margin-inline-start: 2px;
 }
 
 .form-group select {
     width: 100%;
     padding: 0.8rem 2.5rem 0.8rem 0;
     border: none;
-    border-bottom: 1px solid var(--border);
+    /* Matches the input underline; see the contrast note above. */
+    border-bottom: 1px solid color-mix(in srgb, var(--text) 50%, transparent);
     border-radius: 0;
     background-color: transparent;
     color: var(--text);
@@ -1688,7 +1720,9 @@ select:focus-visible {
     display: grid;
     grid-template-columns: 1fr auto 1fr auto 1fr;
     gap: 1.5rem;
-    align-items: center;
+    /* start, not center: step 1 wraps to an extra line and centring
+       pushed its "Day 0" 10px below the other two labels. */
+    align-items: start;
     margin-top: 2rem;
     max-width: 800px;
     margin-left: auto;
@@ -1728,6 +1762,9 @@ select:focus-visible {
     height: 2px;
     background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, transparent), var(--accent));
     border-radius: 1px;
+    /* The steps align to start; the connector still reads better centred
+       against the number row. */
+    align-self: center;
 }
 
 @media (max-width: 768px) {
@@ -1782,10 +1819,8 @@ select:focus-visible {
 }
 
 [data-theme="dark"] .cta-card {
-    background-color: #1E1E1E;
     color: #F0F0F0;
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+    border-top-color: var(--border);
 }
 
 [data-theme="dark"] .cta-form-wrapper {
@@ -1960,6 +1995,13 @@ html {
     flex: 0 0 auto;
 }
 
+/* The loop translates by half the track, so the visible half must be at
+   least as wide as the viewport or a gap scrolls past. The markup
+   therefore carries eight identical groups, four per half, which covers
+   past 4K. Stretching the groups instead was tried and rejected: it
+   distributes the slack between the children and leaves each separator
+   floating detached from the words it separates. */
+
 .tm-word {
     font-family: var(--font-display);
     font-weight: 400;
@@ -2028,19 +2070,342 @@ html {
     }
 }
 
-/* Interaction hint under the hero CTA */
+/* Reassurance line under the hero CTAs */
 .hero-hint {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
     color: var(--text-muted);
     margin-top: var(--space-sm);
 }
 
+/* ========================================
+   SECTION: OFFERS, PROOF, BOOKING
+   The conversion path: three productized offers, evidence,
+   and the consultation booking anchor.
+   ======================================== */
+
+/* A repeatable CTA row so no section is a dead end */
+.section-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-lg);
+}
+
+/* The terminal CTA. It was 166px wide against a 425px form submit button
+   directly below it, which inverted the hierarchy at the one moment that
+   decides the page. Matches the hero's primary width, full-bleed on
+   phones like every other button there. */
+.btn-lg {
+    padding: 1.05rem 2.4rem;
+    font-size: 1.05rem;
+    min-width: 310px;
+}
+
+@media (max-width: 480px) {
+    .btn-lg {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* --- Three offers --- */
+.offer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto auto auto;
+    gap: var(--space-md);
+}
+
+.offer-card {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
+    padding: var(--space-md) var(--space-sm);
+    position: relative;
+}
+
+.offer-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--space-sm);
+    right: var(--space-sm);
+    height: 2px;
+    background: var(--border);
+}
+
+.offer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-sm);
+}
+
+.offer-num {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+}
+
+.offer-duration {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 3px 9px;
+}
+
+.offer-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-xs);
+}
+
+.offer-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: var(--space-sm);
+}
+
+.offer-deliverable {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border);
+}
+
+.offer-deliverable strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* --- Stack chips: the automation tools that have no logo asset --- */
+.stack-chips {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-md) 0 var(--space-sm);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs) var(--space-sm);
+}
+
+.stack-chips li {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: 3px;
+    padding: 6px 14px;
+}
+
+.stack-caption {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+/* --- Proof --- */
+.proof-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+}
+
+.proof-item h3 {
+    font-size: 1.15rem;
+    margin: var(--space-xs) 0 var(--space-sm);
+}
+
+.proof-item p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.proof-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+}
+
+.proof-meta {
+    margin-top: var(--space-sm);
+    font-size: 0.88rem !important;
+    color: var(--text) !important;
+}
+
+.proof-meta a {
+    color: var(--accent);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.proof-meta a:hover {
+    border-bottom-color: var(--accent);
+}
+
+/* --- Beyond automation (secondary offers) --- */
+.beyond-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.beyond-item h3 {
+    font-size: 1.05rem;
+    margin-bottom: var(--space-xs);
+}
+
+.beyond-item p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+}
+
+/* --- Booking: the primary conversion anchor --- */
+.booking-section {
+    position: relative;
+}
+
+/* Flat like the rest of the site: weight comes from type scale and
+   space, not from a tinted panel. */
+.booking-card {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+    padding: clamp(2rem, 5vw, 3.5rem) var(--space-sm);
+    border-top: 1px solid var(--accent);
+    border-bottom: 1px solid var(--border);
+}
+
+.booking-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: clamp(1.9rem, 4.6vw, 3.2rem);
+    line-height: 1;
+    letter-spacing: 0.015em;
+    margin: var(--space-xs) 0 var(--space-sm);
+}
+
+.booking-lede {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--text-muted);
+    max-width: 58ch;
+    margin: 0 auto var(--space-md);
+}
+
+.booking-points {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto var(--space-lg);
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+}
+
+.booking-points li {
+    font-size: 0.95rem;
+    color: var(--text);
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.booking-points li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.booking-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.booking-note {
+    margin-top: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* The email fallback must not compete with the booking anchor above it */
+.cta-title--quiet {
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+}
+
 @media (max-width: 960px) {
-    .hero-hint {
-        display: none; /* no cursor/keys on touch — hint is meaningless there */
+    .offer-grid,
+    .proof-grid,
+    .beyond-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+    }
+
+    .offer-card {
+        grid-template-rows: auto auto auto auto;
+        padding-bottom: var(--space-lg);
+    }
+
+    .offer-head {
+        justify-content: center;
+    }
+
+    .proof-item,
+    .beyond-item {
+        text-align: center;
+    }
+
+    .booking-points {
+        text-align: center;
+    }
+
+    .booking-points li {
+        padding-left: 0;
+    }
+
+    .booking-points li::before {
+        display: none;
+    }
+}
+
+/* RTL mirroring for the new components */
+[dir="rtl"] .offer-card::before {
+    left: var(--space-sm);
+    right: var(--space-sm);
+}
+
+[dir="rtl"] .booking-points li {
+    padding-left: 0;
+    padding-right: 1.5rem;
+}
+
+[dir="rtl"] .booking-points li::before {
+    left: auto;
+    right: 0;
+}
+
+@media (max-width: 960px) {
+    [dir="rtl"] .booking-points li {
+        padding-right: 0;
     }
 }
 
@@ -2240,6 +2605,16 @@ html {
 html[lang="ar"] {
     --font-display: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
     --font-main: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+    /* The mono stack carries no Arabic, so Arabic text fell through to a
+       monospaced fallback that gives every letter the same advance width
+       and breaks the joining, printing ت ق د ي م as separate glyphs.
+       Arabic pages get the Arabic face here; Latin-only runs opt back
+       into real monospace below. */
+    --font-mono: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+}
+
+html[lang="ar"] [lang="en"] {
+    --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
 }
 
 html[lang="ar"] .hero-title,
@@ -2265,9 +2640,37 @@ html[lang="ar"] .section-title {
     line-height: 1.25;
 }
 
-html[lang="ar"] .hero-kicker,
-html[lang="ar"] .section-label {
+/* Negative tracking is a Latin display trick; on Arabic it crowds the
+   joined strokes. Zero it on every heading, not just the titled ones. */
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] h4,
+html[lang="ar"] h5,
+html[lang="ar"] h6 {
     letter-spacing: 0;
+}
+
+/* Tracking of any kind pulls Arabic letters apart and breaks the
+   joining, so no element on an Arabic page carries it. Enumerating the
+   affected classes one at a time is what let .hero-hint, .workshop-badge
+   and .workshop-duration stay broken; this catches them all. Latin-only
+   runs opt back in by marking themselves lang="en". */
+html[lang="ar"] *:not([lang="en"]) {
+    letter-spacing: 0;
+}
+
+html[lang="ar"] .hero-kicker,
+html[lang="ar"] .section-label,
+html[lang="ar"] .hero-hint,
+html[lang="ar"] .stack-caption,
+html[lang="ar"] .booking-note,
+html[lang="ar"] .proof-label,
+html[lang="ar"] .offer-duration,
+html[lang="ar"] .workshop-badge,
+html[lang="ar"] .workshop-duration {
+    letter-spacing: 0;
+    text-transform: none;
 }
 
 /* Mirrored details */
@@ -2290,6 +2693,42 @@ html[lang="ar"] .section-label {
 [dir="rtl"] .grid-card::before {
     left: auto;
     right: var(--space-md);
+}
+
+/* The marquee duplicates its group once and translates by half the
+   track to loop seamlessly. Under RTL the track is laid out from the
+   right edge, so the duplicate sits to the LEFT and the translation
+   has to run positive: translating negative drags the track away from
+   the right edge and opens a gap that grows to half the strip. */
+[dir="rtl"] .type-marquee__track {
+    animation-name: type-marquee-scroll-rtl;
+}
+
+@keyframes type-marquee-scroll-rtl {
+    to { transform: translateX(50%); }
+}
+
+/* Components added for the automation repositioning. The display and
+   mono faces are Latin-only, and uppercase plus letter-spacing break
+   Arabic letter joining, so both are reset wherever the label carries
+   Arabic text. Latin-only chips (n8n, Zapier) keep the mono face. */
+html[lang="ar"] .booking-title,
+html[lang="ar"] .offer-title {
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+html[lang="ar"] .offer-num,
+html[lang="ar"] .offer-duration,
+html[lang="ar"] .proof-label,
+html[lang="ar"] .stack-caption,
+html[lang="ar"] .booking-note,
+html[lang="ar"] .process-number,
+html[lang="ar"] .process-name {
+    font-family: var(--font-main);
+    letter-spacing: 0;
+    text-transform: none;
 }
 
 [dir="rtl"] .process-line {

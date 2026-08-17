@@ -9,7 +9,7 @@
     <meta name="robots" content="noindex, nofollow">
 
     <!-- Security & CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()">
 
@@ -25,7 +25,7 @@
     <meta name="theme-color" content="#FDFCFB" media="(prefers-color-scheme: light)">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/style.css?v=20260723">
+    <link rel="stylesheet" href="/style.css?v=20260817">
 
     <style>
         .error-page-main {
@@ -130,7 +130,7 @@
         }
     </style>
 
-    <script defer src="/script.js?v=20260723"></script>
+    <script defer src="/script.js?v=20260817"></script>
 
     <!-- Arabic-aware 404: GitHub Pages serves this page for missing /ar/ URLs too -->
     <script>
@@ -160,20 +160,20 @@
 
                 var navAr = [
                     ['الرئيسية', '/ar/#hero'],
+                    ['ما نُؤتمته', '/ar/#services'],
                     ['المنتجات', '/ar/products.html'],
                     ['كيف نعمل', '/ar/how-we-work.html'],
-                    ['ورش العمل', '/ar/workshops.html'],
-                    ['كن شريكنا', '/ar/partner.html']
+                    ['ورش العمل', '/ar/workshops.html']
                 ];
                 document.querySelectorAll('.nav-list .nav-link').forEach(function (a, i) {
                     if (navAr[i]) { a.textContent = navAr[i][0]; a.setAttribute('href', navAr[i][1]); }
                 });
                 var cbtn = document.querySelector('.header-actions .btn');
-                if (cbtn) { cbtn.textContent = 'تواصل معنا'; cbtn.setAttribute('href', '/ar/#contact'); }
+                if (cbtn) { cbtn.textContent = 'احجز مكالمة'; cbtn.setAttribute('href', '/ar/#booking'); }
                 var logo = document.querySelector('a.logo');
                 if (logo) logo.setAttribute('href', '/ar/');
                 var ftag = document.querySelector('.footer-tagline');
-                if (ftag) ftag.textContent = 'استشارات تكنولوجيا وابتكار للمؤسسات والجهات الحكومية والشركات الناشئة.';
+                if (ftag) ftag.textContent = 'تطبيق الذكاء الاصطناعي وأتمتة سير العمل للشركات في الأردن ومنطقة الشرق الأوسط وشمال أفريقيا.';
                 var fcopy = document.querySelector('.footer-copy');
                 if (fcopy) fcopy.textContent = '© VTEC. جميع الحقوق محفوظة.';
                 var flogo = document.querySelector('.footer-logo');
@@ -195,15 +195,15 @@
                 </a>
                 <nav class="nav" id="nav-menu" aria-label="Main navigation">
                     <ul class="nav-list">
-                        <li><a href="/" class="nav-link">Home</a></li>
+                        <li><a href="/#hero" class="nav-link">Home</a></li>
+                        <li><a href="/#services" class="nav-link">What We Automate</a></li>
                         <li><a href="/products.html" class="nav-link">Products</a></li>
                         <li><a href="/how-we-work.html" class="nav-link">How We Work</a></li>
                         <li><a href="/workshops.html" class="nav-link">Workshops</a></li>
-                        <li><a href="/partner.html" class="nav-link">Partner with us</a></li>
                     </ul>
                 </nav>
                 <div class="header-actions">
-                    <a href="/#contact" class="btn btn-primary btn-sm">Contact Us</a>
+                    <a href="/#booking" class="btn btn-primary btn-sm">Book a call</a>
                     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
                         <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                         <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -243,7 +243,7 @@
         <div class="container">
             <div class="footer-inner">
                 <a href="/" class="footer-logo">VTEC</a>
-                <p class="footer-tagline">Technology and innovation consultancy for organizations, government entities, and startups.</p>
+                <p class="footer-tagline">AI implementation and workflow automation for businesses in Jordan and the MENA region.</p>
                 <div class="footer-icons">
                     <a href="mailto:info@vtec-jo.com" class="footer-icon-btn" aria-label="Email us at info@vtec-jo.com" title="Email us">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>

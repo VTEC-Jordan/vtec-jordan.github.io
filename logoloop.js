@@ -8,15 +8,16 @@
 
   // Technology stack logos as inline SVG HTML strings.
   // All use currentColor so they inherit the CSS accent colour.
+  // Platforms the automations actually run on. NVIDIA and Ollama were
+  // removed deliberately: the page states we do not train models or sell
+  // GPU capacity, and showing them contradicted that in the same viewport.
   var LOGOS = [
-    { src: '/assets/videos-images/AWS.png',                                    alt: 'AWS',    title: 'AWS' },
-    { src: '/assets/videos-images/ChatGPT_Logo_1.png',                         alt: 'OpenAI', title: 'OpenAI / ChatGPT' },
     { src: '/assets/videos-images/Claude_Logo_1.png',                          alt: 'Claude', title: 'Claude' },
-    { src: '/assets/videos-images/NVIDIA_Symbol_1.png',                        alt: 'NVIDIA', title: 'NVIDIA' },
-    { src: '/assets/videos-images/idAFFUENLe_logos.png',                       alt: 'Ollama', title: 'Ollama' },
-    { src: '/assets/videos-images/Microsoft_Azure_Portal_id4YvwdUb-_1.png',    alt: 'Azure',  title: 'Azure' },
+    { src: '/assets/videos-images/ChatGPT_Logo_1.png',                         alt: 'OpenAI', title: 'OpenAI' },
     { src: '/assets/videos-images/GitHub_Symbol_2.webp',                       alt: 'GitHub', title: 'GitHub' },
-    { src: '/assets/videos-images/Visual_Studio_Code_Logo_1.png',               alt: 'VS Code', title: 'VS Code' }
+    { src: '/assets/videos-images/AWS.png',                                    alt: 'AWS',    title: 'AWS' },
+    { src: '/assets/videos-images/Microsoft_Azure_Portal_id4YvwdUb-_1.png',    alt: 'Azure',  title: 'Azure' },
+    { src: '/assets/videos-images/Visual_Studio_Code_Logo_1.png',              alt: 'VS Code', title: 'VS Code' }
   ];
 
   function createLogoLoop(container, logos, options) {
@@ -66,6 +67,8 @@
       return ul;
     }
 
+    var isRTL = getComputedStyle(container).direction === 'rtl';
+
     var seqWidth = 0;
     var offset   = 0;
     var velocity = 0;
@@ -94,7 +97,11 @@
       velocity  += (target - velocity) * ease;
       if (seqWidth > 0) {
         offset = ((offset + velocity * dt) % seqWidth + seqWidth) % seqWidth;
-        track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
+        // Under RTL the track is laid out from the right edge and the
+        // duplicate copies sit to the left, so the travel has to be
+        // positive. Translating negative pulls the track off the right
+        // edge and leaves a growing empty gap there.
+        track.style.transform = 'translate3d(' + (isRTL ? offset : -offset) + 'px,0,0)';
       }
       rafId = requestAnimationFrame(tick);
     }

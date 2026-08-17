@@ -31,3 +31,6 @@ components.json
 # AI agent tooling — internal, must never be published to the site
 .agents/
 .claude/
+
+# Playwright MCP screenshot scratch
+.playwright-mcp/

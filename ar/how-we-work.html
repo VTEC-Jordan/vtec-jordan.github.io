@@ -13,7 +13,7 @@
     <link rel="alternate" hreflang="x-default" href="https://www.vtec-jo.com/how-we-work.html">
 
     <!-- Security -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; object-src 'none'; frame-src 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests; block-all-mixed-content;">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()">
 
@@ -38,7 +38,7 @@
 
     <!-- Preload Critical Resources -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" as="style">
-    <link rel="preload" href="/style.css?v=20260723" as="style">
+    <link rel="preload" href="/style.css?v=20260817" as="style">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
@@ -50,7 +50,7 @@
     <meta name="theme-color" content="#FDFCFB" media="(prefers-color-scheme: light)">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/style.css?v=20260723">
+    <link rel="stylesheet" href="/style.css?v=20260817">
 
     <!-- Page-specific styles -->
     <style>
@@ -242,7 +242,7 @@
     </style>
 
     <!-- JS -->
-    <script defer src="/script.js?v=20260723"></script>
+    <script defer src="/script.js?v=20260817"></script>
 
     <!-- Structured Data: breadcrumb trail -->
     <script type="application/ld+json">
@@ -269,14 +269,14 @@
                 <nav class="nav" id="nav-menu" aria-label="التنقل الرئيسي">
                     <ul class="nav-list">
                         <li><a href="/ar/#hero" class="nav-link">الرئيسية</a></li>
+                        <li><a href="/ar/#services" class="nav-link">ما نُؤتمته</a></li>
                         <li><a href="/ar/products.html" class="nav-link">المنتجات</a></li>
                         <li><a href="/ar/how-we-work.html" class="nav-link" aria-current="page">كيف نعمل</a></li>
                         <li><a href="/ar/workshops.html" class="nav-link">ورش العمل</a></li>
-                        <li><a href="/ar/partner.html" class="nav-link">كن شريكنا</a></li>
                     </ul>
                 </nav>
                 <div class="header-actions">
-                    <a href="/ar/#contact" class="btn btn-primary btn-sm">تواصل معنا</a>
+                    <a href="/ar/#booking" class="btn btn-primary btn-sm">احجز مكالمة</a>
                     <a href="/how-we-work.html" class="lang-toggle" lang="en" title="English version" aria-label="English version"><svg class="flag" width="21" height="14" viewBox="0 0 21 14" aria-hidden="true"><rect width="21" height="14" fill="#012169"/><path d="M0 0 L21 14 M21 0 L0 14" stroke="#fff" stroke-width="2.8"/><path d="M0 0 L21 14 M21 0 L0 14" stroke="#C8102E" stroke-width="1.2"/><path d="M10.5 0 V14 M0 7 H21" stroke="#fff" stroke-width="4.6"/><path d="M10.5 0 V14 M0 7 H21" stroke="#C8102E" stroke-width="2.6"/></svg><span>EN</span></a>
                     <button class="theme-toggle" id="theme-toggle" aria-label="تبديل الوضع الليلي" title="تبديل المظهر">
                         <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -407,7 +407,7 @@
                                 دون رسوم تطوير مسبقة. تقدم VTEC خدماتها بنظام الأتعاب المؤجلة وتحصل على <strong>20% من ميزانية التكنولوجيا</strong> المخصصة من جولات التمويل الناجحة، وفق شروط تعاقدية متفق عليها. يبقى نقدك معك حتى تحصل على التمويل.
                             </div>
 
-                            <a href="/ar/partner.html" class="btn btn-primary">قدّم طلب شراكة</a>
+                            <a href="/ar/partner.html" class="btn btn-secondary">قدّم طلب شراكة</a>
                         </div>
                     </div>
 
@@ -459,12 +459,12 @@
                         <h2 class="cta-title">لست متأكداً من المسار المناسب؟</h2>
                         <p class="cta-text">أخبرنا بوضعك وما تحاول تحقيقه، وسنقترح عليك نقطة البداية الأنسب — دون أي التزام.</p>
                         <div class="contact-methods">
-                            <a href="mailto:info@vtec-jo.com" class="btn btn-primary">البريد الإلكتروني</a>
-                            <a href="https://www.linkedin.com/company/venture-tech-consultancy/?viewAsMember=true" target="_blank" rel="noopener noreferrer" class="btn btn-primary">لينكدإن</a>
+                            <a href="mailto:info@vtec-jo.com" class="btn btn-secondary">البريد الإلكتروني</a>
+                            <a href="https://www.linkedin.com/company/venture-tech-consultancy/?viewAsMember=true" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">لينكدإن</a>
                         </div>
                     </div>
                     <div class="cta-form-wrapper">
-                        <form id="contact-form">
+                        <form method="post" id="contact-form">
                             <p class="form-title">أرسل رسالة</p>
                             <div class="hp-field" aria-hidden="true">
                                 <label for="website-contact">الموقع الإلكتروني</label>
@@ -506,7 +506,7 @@
         <div class="container">
             <div class="footer-inner">
                 <a href="/ar/" class="footer-logo">VTEC</a>
-                <p class="footer-tagline">استشارات تكنولوجيا وابتكار للمؤسسات والجهات الحكومية والشركات الناشئة.</p>
+                <p class="footer-tagline">تطبيق الذكاء الاصطناعي وأتمتة سير العمل للشركات في الأردن ومنطقة الشرق الأوسط وشمال أفريقيا.</p>
                 <div class="footer-icons">
                     <a href="mailto:info@vtec-jo.com" class="footer-icon-btn" aria-label="راسلنا على info@vtec-jo.com" title="راسلنا">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>

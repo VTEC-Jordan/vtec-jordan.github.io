@@ -195,11 +195,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileNavToggle = document.getElementById('mobile-nav-toggle');
     const navMenu = document.getElementById('nav-menu');
 
-    function closeMobileMenu() {
+    // The open menu is a fixed, opaque overlay, but the page behind it stays
+    // in the tab order. Without this, tabbing past the last nav link moves
+    // focus onto controls hidden underneath, with no visible focus ring.
+    // The header itself is deliberately excluded: the toggle, theme and
+    // language buttons stay visible beside the open menu, and making them
+    // inert would leave no way to close it.
+    const NAV_BACKDROP = 'main, .footer';
+
+    function setBackdropInert(inert) {
+        document.querySelectorAll(NAV_BACKDROP).forEach((el) => {
+            if (inert) {
+                el.setAttribute('inert', '');
+                el.setAttribute('aria-hidden', 'true');
+            } else {
+                el.removeAttribute('inert');
+                el.removeAttribute('aria-hidden');
+            }
+        });
+    }
+
+    function closeMobileMenu(returnFocus) {
         if (!navMenu || !mobileNavToggle) return;
+        if (!navMenu.classList.contains('active')) return;
         navMenu.classList.remove('active');
         mobileNavToggle.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
+        setBackdropInert(false);
+        if (returnFocus) mobileNavToggle.focus();
     }
 
     function openMobileMenu() {
@@ -207,13 +230,16 @@ document.addEventListener('DOMContentLoaded', () => {
         navMenu.classList.add('active');
         mobileNavToggle.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
+        setBackdropInert(true);
+        const firstLink = navMenu.querySelector('.nav-link');
+        if (firstLink) firstLink.focus();
     }
 
     if (mobileNavToggle && navMenu) {
         mobileNavToggle.addEventListener('click', () => {
             const isExpanded = navMenu.classList.contains('active');
             if (isExpanded) {
-                closeMobileMenu();
+                closeMobileMenu(true);
             } else {
                 openMobileMenu();
             }
@@ -221,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape' && navMenu.classList.contains('active')) {
-                closeMobileMenu();
+                closeMobileMenu(true);
             }
         });
 
@@ -357,7 +383,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function cleanInput(value, maxLength) {
         if (typeof value !== 'string') return '';
-        return value.replace(CONTROL_CHARS_REGEX, '').trim().slice(0, maxLength);
+        const cleaned = value.replace(CONTROL_CHARS_REGEX, '').trim().slice(0, maxLength);
+        // These values land in a Google Sheet, so the sink is a spreadsheet
+        // cell, not HTML. A leading =, +, - or @ makes the cell a live
+        // formula that runs with the privileges of whoever opens the sheet.
+        // Quote it to force text. The Apps Script must do the same: this
+        // copy is only reachable through the browser, and the endpoint
+        // accepts direct POSTs.
+        return /^[=+\-@]/.test(cleaned) ? "'" + cleaned : cleaned;
     }
 
     function isLikelyBotSubmission(formEl) {
@@ -433,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
+            submitBtn.textContent = FORM_MSG.sending;
 
             if (isLikelyBotSubmission(contactForm)) {
                 setStatusMessage(formStatus, FORM_MSG.contactOk, 'success');
@@ -495,7 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = partnerForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
+            submitBtn.textContent = FORM_MSG.sending;
 
             if (isLikelyBotSubmission(partnerForm)) {
                 setStatusMessage(formStatus, FORM_MSG.partnerOk, 'success');
@@ -566,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = workshopForm.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
+            submitBtn.textContent = FORM_MSG.sending;
 
             if (isLikelyBotSubmission(workshopForm)) {
                 setStatusMessage(formStatus, FORM_MSG.workshopOk, 'success');
@@ -1070,6 +1103,10 @@ document.addEventListener('DOMContentLoaded', () => {
             '.section-subtitle',
             '.tracks-intro',
             '.service-item',
+            '.offer-card',
+            '.proof-item',
+            '.beyond-item',
+            '.booking-card',
             '.grid-card',
             '.workshop-card',
             '.track-card',
