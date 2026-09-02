@@ -11,7 +11,7 @@
     --accent-light: #83C5BE;
     --border: rgba(0, 0, 0, 0.1);
     --card-bg: #FFFFFF;
-    --color-success: #16a34a;
+    --color-success: #15803D;
     --color-error: #dc2626;
     --header-bg: rgba(253, 252, 251, 0.68);
     
@@ -209,8 +209,11 @@ img {
     min-height: 44px;
 }
 
+/* Full width within its column, but never wider than the booking CTA it
+   is subordinate to: it rendered at 469px against that button's 310px. */
 .btn-block {
     width: 100%;
+    max-width: 310px;
 }
 
 .btn:disabled {
@@ -810,18 +813,29 @@ select:focus-visible {
     gap: 8px;
 }
 
+/* 24px target per SC 2.5.8; the visible dot stays 8px via ::after.
+   The old --border fill was 1.25:1, under the 3:1 non-text bar. */
 .slider-dot {
-    width: 8px;
-    height: 8px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background-color: var(--border);
-    cursor: pointer;
-    transition: var(--transition);
+    background: none;
     border: none;
     padding: 0;
+    cursor: pointer;
+    position: relative;
 }
 
-.slider-dot.active {
+.slider-dot::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background-color: color-mix(in srgb, var(--text) 45%, transparent);
+    transition: background-color var(--transition), transform var(--transition);
+}
+
+.slider-dot.active::after {
     background-color: var(--accent);
     transform: scale(1.2);
 }
@@ -1060,9 +1074,16 @@ select:focus-visible {
     resize: none;
 }
 
+/* Only suppress the ring for pointer focus. Keyboard focus keeps the
+   global :focus-visible outline: a 1px underline shifting between two
+   mid-greys is about 1.8:1 and is not a focus indicator (SC 2.4.7). */
+.form-group input:focus:not(:focus-visible),
+.form-group textarea:focus:not(:focus-visible) {
+    outline: none;
+}
+
 .form-group input:focus,
 .form-group textarea:focus {
-    outline: none;
     border-color: var(--accent);
 }
 
@@ -1268,8 +1289,11 @@ select:focus-visible {
     background-position: right 0.4rem center;
 }
 
-.form-group select:focus {
+.form-group select:focus:not(:focus-visible) {
     outline: none;
+}
+
+.form-group select:focus {
     border-color: var(--accent);
 }
 

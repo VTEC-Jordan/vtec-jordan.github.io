@@ -72,6 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update dots
             Array.from(dotsContainer.querySelectorAll('.slider-dot')).forEach((dot, i) => {
                 dot.classList.toggle('active', i === current);
+                // Not colour-only: expose the current page to assistive tech.
+                if (i === current) dot.setAttribute('aria-current', 'true');
+                else dot.removeAttribute('aria-current');
             });
         }
 
@@ -159,6 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
             wNextBtn.disabled = wCurrent >= wTotalPages() - 1;
             Array.from(wDotsContainer.querySelectorAll('.slider-dot')).forEach((dot, i) => {
                 dot.classList.toggle('active', i === wCurrent);
+                if (i === wCurrent) dot.setAttribute('aria-current', 'true');
+                else dot.removeAttribute('aria-current');
             });
         }
 
@@ -315,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = link.href.replace('mailto:', '');
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(email).then(() => {
-                    showEmailToast('Email copied: ' + email);
+                    showEmailToast((PAGE_AR ? 'تم نسخ البريد الإلكتروني: ' : 'Email copied: ') + email);
                 }).catch(() => {});
             }
         });
@@ -340,6 +345,13 @@ document.addEventListener('DOMContentLoaded', () => {
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     }
     window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+    // The header hides on scroll down but its controls stay tabbable, and a
+    // fixed element cannot be scrolled into view. Without this, Tab lands on
+    // a logo or nav link sitting entirely above the viewport (SC 2.4.11).
+    if (header) {
+        header.addEventListener('focusin', () => header.classList.remove('hide'));
+    }
     updateHeaderState();
 
     // -------------------------------------------------------
@@ -491,7 +503,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const payload = JSON.stringify({ name, email, message });
+            const trackEl = document.getElementById('track-interest');
+            const trackInterest = trackEl ? cleanInput(trackEl.value, 80) : '';
+            const payload = JSON.stringify({ name, email, message, trackInterest });
 
             fetch(CONTACT_SCRIPT_URL, {
                 method: 'POST',
@@ -1158,5 +1172,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
         els.forEach((el) => observer.observe(el));
+
+        // A field can receive focus while its reveal wrapper is still at
+        // opacity 0, so the user types into an invisible form. Reveal on
+        // focus regardless of how much of the container is intersecting.
+        document.addEventListener('focusin', (event) => {
+            const el = event.target.closest && event.target.closest('.reveal');
+            if (!el) return;
+            el.classList.add('is-revealed');
+            observer.unobserve(el);
+        });
     })();
 });
