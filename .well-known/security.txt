@@ -1,6 +1,6 @@
 Contact: mailto:security@vtec-jo.com
-Policy: https://www.vtec-jo.com/security/
-Acknowledgments: https://www.vtec-jo.com/security/thanks/
+Policy: https://vtec-jo.com/security/
+Acknowledgments: https://vtec-jo.com/security/thanks/
 Preferred-Languages: en, ar
-Canonical: https://www.vtec-jo.com/.well-known/security.txt
+Canonical: https://vtec-jo.com/.well-known/security.txt
 Expires: 2027-08-01T00:00:00.000Z

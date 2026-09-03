@@ -7,7 +7,7 @@ Disallow: /node_modules/
 Disallow: /*.env
 Disallow: /.htaccess
 Crawl-delay: 1
-Sitemap: https://www.vtec-jo.com/sitemap.xml
+Sitemap: https://vtec-jo.com/sitemap.xml
 
 # Google-specific optimizations
 User-agent: Googlebot
